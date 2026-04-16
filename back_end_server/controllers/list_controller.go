@@ -9,11 +9,12 @@ import (
 )
 
 type ListController struct {
-	service services.ListService
+	service     services.ListService
+	cardService services.CardService
 }
 
-func NewListController(s services.ListService) *ListController{
-	return &ListController{service: s}
+func NewListController(s services.ListService, cs services.CardService) *ListController {
+	return &ListController{service: s, cardService: cs}
 }
 
 func (c *ListController) CreateList(ctx fiber.Ctx) error{
@@ -69,7 +70,21 @@ func (c *ListController) GetListOnBoard(ctx fiber.Ctx) error{
 	return utils.Success(ctx, "Lists retrieved successfully", lists)
 }
 
-func (c *ListController) DeleteList(ctx fiber.Ctx) error{
+func (c *ListController) GetCardsOnList(ctx fiber.Ctx) error {
+	listPublicID := ctx.Params("id")
+	if _, err := uuid.Parse(listPublicID); err != nil {
+		return utils.BadRequest(ctx, "Invalid ID", err.Error())
+	}
+
+	cards, err := c.cardService.GetByListID(listPublicID)
+	if err != nil {
+		return utils.NotFound(ctx, "Cards not found", err.Error())
+	}
+
+	return utils.Success(ctx, "Cards retrieved successfully", cards)
+}
+
+func (c *ListController) DeleteList(ctx fiber.Ctx) error {
 	publicID := ctx.Params("id")
 	if _, err := uuid.Parse(publicID); err != nil {
 		return utils.BadRequest(ctx, "Invalid ID",err.Error())

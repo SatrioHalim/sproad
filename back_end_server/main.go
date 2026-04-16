@@ -38,12 +38,12 @@ func main() {
 	// List handling
 	listPositionRepo := repositories.NewListPositionRepository()
 	listRepo := repositories.NewListRepository()
-	listService := services.NewListService(listRepo,boardRepo,listPositionRepo)
-	listController := controllers.NewListController(listService)
+	listService := services.NewListService(listRepo, boardRepo, listPositionRepo)
 
 	// Card handling
 	cardRepo := repositories.NewCardRepository()
-	cardService := services.NewCardService(cardRepo,listRepo,userRepo)
+	cardService := services.NewCardService(cardRepo, listRepo, userRepo)
+	listController := controllers.NewListController(listService, cardService)
 	cardController := controllers.NewCardController(cardService)
 
 	routes.Setup(app, userController,boardController,listController,cardController)

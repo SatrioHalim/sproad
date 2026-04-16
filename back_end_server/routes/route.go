@@ -44,9 +44,10 @@ func Setup(app *fiber.App,
 
 	// List routes
 	listGroup := api.Group("/lists")
-	listGroup.Post("/",lc.CreateList)
-	listGroup.Put("/:id",lc.UpdateList)
-	listGroup.Delete("/:id",lc.DeleteList)
+	listGroup.Post("/", lc.CreateList)
+	listGroup.Get("/:id/cards", lc.GetCardsOnList)
+	listGroup.Put("/:id", lc.UpdateList)
+	listGroup.Delete("/:id", lc.DeleteList)
 
 	// Card routes
 	cardGroup := api.Group("/cards")
