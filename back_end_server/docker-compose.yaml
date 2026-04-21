@@ -17,6 +17,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: secret
       DB_NAME: mydb
+      ENV: production 
     restart: always
 
   db:
