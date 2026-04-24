@@ -29,9 +29,15 @@ services:
     container_name: vite_frontend
     ports:
       - "5173:5173"
+    volumes:
+      - ./front_end_client:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     depends_on:
       - app
     restart: always
+    command: npm run dev -- --host 0.0.0.0
 
   db:
     image: postgres:15
