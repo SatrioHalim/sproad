@@ -1,24 +1,26 @@
-import {ThemeProvider, CssBaseline,createTheme,Button} from '@mui/material'
+import { Button, createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 
 const theme = createTheme({
   typography: {
-    fontFamily:["Roboto","sans-serif"].join(",")
-  }
-})
+    fontFamily: ['Roboto', 'sans-serif'].join(','),
+  },
+});
 
 const Home = () => {
   return (
-    <Button type="button" variant="contained">MUI button</Button>
-  )
-}
+    <Button type="button" variant="contained">
+      MUI button
+    </Button>
+  );
+};
 
 const App = () => {
-  return(
+  return (
     <ThemeProvider theme={theme}>
-      <CssBaseline></CssBaseline>
-      <Home></Home>
+      <CssBaseline />
+      <Home />
     </ThemeProvider>
-  )
-}
+  );
+};
 
 export default App;
