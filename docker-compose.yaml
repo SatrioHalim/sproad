@@ -1,23 +1,36 @@
 services:
   app:
-    build: .
+    build:
+      context: ./back_end_server
+      dockerfile: dockerfile
     container_name: go_fiber_app
     env_file:
-      - .env
+      - ./back_end_server/.env
     ports:
       - "3030:3030"
     depends_on:
       db:
         condition: service_healthy
     volumes:
-      - ./.env:/root/.env
+      - ./back_end_server/.env:/root/.env
     environment:
       DB_HOST: db
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: secret
       DB_NAME: mydb
-      ENV: production 
+      ENV: production
+    restart: always
+
+  frontend:
+    build:
+      context: ./front_end_client
+      dockerfile: Dockerfile
+    container_name: vite_frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - app
     restart: always
 
   db:
@@ -37,7 +50,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-  
+
   # http://localhost:5050 => pgadmin
   pgadmin:
     image: dpage/pgadmin4
