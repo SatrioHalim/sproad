@@ -2,6 +2,7 @@ import { Box,Typography,Link,createTheme, CssBaseline, ThemeProvider } from '@mu
 import {
   createBrowserRouter, RouterProvider
 } from 'react-router';
+import Table from './components/ui/table/Table';
 
 const theme = createTheme({
   typography: {
@@ -14,8 +15,32 @@ const router = createBrowserRouter([
     path:"/",
     element: (
       <Box>
-        <Typography variant='h1'>Home</Typography>
-        <Link to={"/login"}>Login</Link>
+        <Table columns={[
+          {
+            id:'tugas',
+            label:'Tugas'
+          },
+          {
+            id:'status',
+            label:'Status'
+          }
+        ]} data={[
+          {
+            id:1,
+            tugas:'Tugas 1',
+            status:'Baru'
+          },
+          {
+            id:2,
+            tugas:'Tugas 2',
+            status:'On-going'
+          },
+          {
+            id:3,
+            tugas:'Tugas 3',
+            status:'Done'
+          },
+        ]}></Table>
       </Box>
     )
   },
