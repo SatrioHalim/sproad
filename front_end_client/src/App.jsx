@@ -3,6 +3,7 @@ import {
   createBrowserRouter, RouterProvider
 } from 'react-router';
 import Table from './components/ui/table/Table';
+import Pagination from './components/ui/pagination';
 
 const theme = createTheme({
   typography: {
@@ -41,6 +42,9 @@ const router = createBrowserRouter([
             status:'Done'
           },
         ]}></Table>
+        <Pagination count={10} onChange={(event,page) => {
+          console.log("page: ", page);
+        }}></Pagination>
       </Box>
     )
   },
