@@ -1,9 +1,16 @@
-import { Box,Typography,Link,createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import {
-  createBrowserRouter, RouterProvider
-} from 'react-router';
-import Table from './components/ui/table/Table';
+  Box,
+  createTheme,
+  CssBaseline,
+  Link,
+  ThemeProvider,
+  Typography,
+} from '@mui/material';
+import { createBrowserRouter, RouterProvider } from 'react-router';
+
+import Dashboard from './components/page/dashboard/Dashboard';
 import Pagination from './components/ui/pagination';
+import Table from './components/ui/table/Table';
 
 const theme = createTheme({
   typography: {
@@ -13,57 +20,67 @@ const theme = createTheme({
 
 const router = createBrowserRouter([
   {
-    path:"/",
+    path: '/',
     element: (
       <Box>
-        <Table columns={[
-          {
-            id:'tugas',
-            label:'Tugas'
-          },
-          {
-            id:'status',
-            label:'Status'
-          }
-        ]} data={[
-          {
-            id:1,
-            tugas:'Tugas 1',
-            status:'Baru'
-          },
-          {
-            id:2,
-            tugas:'Tugas 2',
-            status:'On-going'
-          },
-          {
-            id:3,
-            tugas:'Tugas 3',
-            status:'Done'
-          },
-        ]}></Table>
-        <Pagination count={10} onChange={(event,page) => {
-          console.log("page: ", page);
-        }}></Pagination>
+        <Table
+          columns={[
+            {
+              id: 'tugas',
+              label: 'Tugas',
+            },
+            {
+              id: 'status',
+              label: 'Status',
+            },
+          ]}
+          data={[
+            {
+              id: 1,
+              tugas: 'Tugas 1',
+              status: 'Baru',
+            },
+            {
+              id: 2,
+              tugas: 'Tugas 2',
+              status: 'On-going',
+            },
+            {
+              id: 3,
+              tugas: 'Tugas 3',
+              status: 'Done',
+            },
+          ]}
+        />
+        <Pagination
+          count={10}
+          onChange={(event, page) => {
+            console.log('page: ', page);
+          }}
+        />
       </Box>
-    )
+    ),
   },
   {
-    path: "/login",
-    element:(
+    path: '/login',
+    element: (
       <Box>
-        <Typography variant='h1'>Login</Typography>
-        <Link to={"/"}>Back to Home</Link>
+        <Typography variant="h1">Login</Typography>
+        <Link to={'/'}>Back to Home</Link>
       </Box>
-    )
-  }
+    ),
+  },
+  {
+    path: '/dashboard',
+    element: <Dashboard />,
+  },
 ]);
 
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <RouterProvider router={router}></RouterProvider>
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 };
