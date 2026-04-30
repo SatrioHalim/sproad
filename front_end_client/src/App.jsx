@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 
+import Login from './components/page/auth/login';
 import Dashboard from './components/page/dashboard/Dashboard';
 import Pagination from './components/ui/pagination';
 import Table from './components/ui/table/Table';
@@ -62,7 +63,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '/login',
+    path: '/link',
     element: (
       <Box>
         <Typography variant="h1">Login</Typography>
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
   {
     path: '/dashboard',
     element: <Dashboard />,
+  },
+  {
+    path: '/login',
+    element: <Login />,
   },
 ]);
 
