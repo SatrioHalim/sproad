@@ -29,11 +29,11 @@ const TextField = ({
               value={value}
               onblur={onBlur}
               onChange={onChange}
-             />
+            />
           </Box>
         );
       }}
-     />
+    />
   );
 };
 

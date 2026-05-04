@@ -24,7 +24,7 @@ const Select = ({
       name={name}
       render={({ field: { value, onChange, onBlur } }) => {
         const handleChange = (e) => {
-          onchange(e.target.value);
+          onChange(e.target.value);
         };
 
         return (
@@ -37,7 +37,7 @@ const Select = ({
               value={value}
               label={label}
               onChange={handleChange}
-              onBlur={onblur}
+              onBlur={onBlur}
             >
               {options?.map((option, index) => (
                 <MenuItem key={index} value={option.value}>
