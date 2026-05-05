@@ -1,7 +1,8 @@
-import { TextField as BaseTextField, Box } from '@mui/material';
+import { DatePicker as BaseDatePicker } from '@mui/x-date-pickers';
+import { Box } from '@mui/material';
 import { Controller } from 'react-hook-form';
 
-const TextField = ({
+const DatePicker = ({
   control,
   name,
   label,
@@ -21,15 +22,18 @@ const TextField = ({
               marginBottom: 2,
             }}
           >
-            <BaseTextField
+            <BaseDatePicker
               {...props}
-              fullWidth
               label={label}
-              variant="outlined"
               value={value}
-              onBlur={onBlur}
               onChange={onChange}
-              helperText={helperText}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  helperText,
+                  onBlur,
+                },
+              }}
             />
           </Box>
         );
@@ -38,4 +42,4 @@ const TextField = ({
   );
 };
 
-export default TextField;
+export default DatePicker;

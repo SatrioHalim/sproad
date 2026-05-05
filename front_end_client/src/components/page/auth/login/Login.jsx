@@ -3,26 +3,33 @@ import { useForm } from 'react-hook-form';
 
 import Select from '../../../ui/forms/select';
 import TextField from '../../../ui/forms/textfield';
+import DatePicker from '../../../ui/forms/datepicker';
+import dayjs from 'dayjs';
 
 const Login = () => {
   const { control, watch } = useForm({
     defaultValues: {
       username: '',
       category: '',
+      filterDate: dayjs(),
     },
   });
   const username = watch('username');
   const category = watch('category');
+  const filterDate = watch('filterDate');
 
   console.log(`username : ${username}`);
   console.log(`category : ${category}`);
+  console.log(`filterDate : ${filterDate}`);
 
   return (
     <Stack
       spacing={2}
-      alignItems={'center'}
-      justifyContent={'center'}
-      height={'100vh'}
+      sx={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+      }}
     >
       <Paper
         sx={{
@@ -30,6 +37,11 @@ const Login = () => {
           padding: 2,
         }}
       >
+        <DatePicker
+          name={'filterDate'}
+          control={control}
+          label={'Pilih tanggal'}
+        ></DatePicker>
         <TextField name={'username'} control={control} label={'Username'} />
         <Select
           name={'category'}

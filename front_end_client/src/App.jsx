@@ -7,7 +7,8 @@ import {
   Typography,
 } from '@mui/material';
 import { createBrowserRouter, RouterProvider } from 'react-router';
-
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Login from './components/page/auth/login';
 import Dashboard from './components/page/dashboard/Dashboard';
 import Pagination from './components/ui/pagination';
@@ -84,8 +85,10 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <RouterProvider router={router} />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <CssBaseline />
+        <RouterProvider router={router} />
+      </LocalizationProvider>
     </ThemeProvider>
   );
 };
