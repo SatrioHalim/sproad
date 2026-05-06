@@ -1,10 +1,10 @@
 import { Paper, Stack } from '@mui/material';
+import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 
+import DatePicker from '../../../ui/forms/datepicker';
 import Select from '../../../ui/forms/select';
 import TextField from '../../../ui/forms/textfield';
-import DatePicker from '../../../ui/forms/datepicker';
-import dayjs from 'dayjs';
 
 const Login = () => {
   const { control, watch } = useForm({
@@ -41,7 +41,7 @@ const Login = () => {
           name={'filterDate'}
           control={control}
           label={'Pilih tanggal'}
-        ></DatePicker>
+         />
         <TextField name={'username'} control={control} label={'Username'} />
         <Select
           name={'category'}

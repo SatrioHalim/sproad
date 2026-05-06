@@ -6,11 +6,13 @@ import {
   ThemeProvider,
   Typography,
 } from '@mui/material';
-import { createBrowserRouter, RouterProvider } from 'react-router';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { createBrowserRouter, RouterProvider } from 'react-router';
+
 import Login from './components/page/auth/login';
 import Dashboard from './components/page/dashboard/Dashboard';
+import DetailProject from './components/page/projects/detail_project';
 import Pagination from './components/ui/pagination';
 import Table from './components/ui/table/Table';
 
@@ -79,6 +81,10 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />,
+  },
+  {
+    path: '/projects/:id',
+    element: <DetailProject />,
   },
 ]);
 
