@@ -1,8 +1,8 @@
 import { Settings } from '@mui/icons-material';
 import { Stack } from '@mui/material';
 
-import Dropdown from '../../../ui/dropdown';
 import Avatar from '../../../ui/avatar';
+import Dropdown from '../../../ui/dropdown';
 
 const DetailProject = () => {
   return (
@@ -13,12 +13,15 @@ const DetailProject = () => {
         justifyContent: 'center',
         alignItems: 'center',
       }}
-      direction={"row"}
+      direction={'row'}
       spacing={2}
     >
-        < Avatar text={"Satrio Halim Abdurrahman"} onClick={() => {
-            console.log("handle click avatar")
-        }}/>
+      <Avatar
+        text={'Satrio Halim Abdurrahman'}
+        onClick={() => {
+          console.log('handle click avatar');
+        }}
+      />
       <Dropdown
         icon={<Settings />}
         options={[
@@ -35,7 +38,7 @@ const DetailProject = () => {
             },
           },
         ]}
-       />
+      />
     </Stack>
   );
 };

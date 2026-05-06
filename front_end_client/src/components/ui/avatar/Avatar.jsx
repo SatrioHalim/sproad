@@ -1,16 +1,11 @@
-import {
-    Avatar as BaseAvatar,
-    Box,
-    Popover,
-    Typography
-} from '@mui/material'
+import { Avatar as BaseAvatar, Box, Popover, Typography } from '@mui/material';
 import { useState } from 'react';
 
 function stringToColor(string) {
   let hash = 0;
   let i;
 
-  /* eslint-disable no-bitwise */
+   
   for (i = 0; i < string.length; i += 1) {
     hash = string.charCodeAt(i) + ((hash << 5) - hash);
   }
@@ -21,15 +16,21 @@ function stringToColor(string) {
     const value = (hash >> (i * 8)) & 0xff;
     color += `00${value.toString(16)}`.slice(-2);
   }
-  /* eslint-enable no-bitwise */
+   
 
   return color;
 }
 
 function stringAvatar(name) {
-    const initialName = name.split(' ').map((n) => n[0]).join('').trim().toUpperCase();
+  const initialName = name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .trim()
+    .toUpperCase();
 
-    const displayName = initialName.length >= 2 ? initialName.substring(0, 2) : initialName;
+  const displayName =
+    initialName.length >= 2 ? initialName.substring(0, 2) : initialName;
 
   return {
     sx: {
@@ -40,53 +41,52 @@ function stringAvatar(name) {
   };
 }
 
-const Avatar = ({
-    text,
-    onClick
-}) => {
-    const [anchorEl, setAnchorEl] = useState(null);
+const Avatar = ({ text, onClick }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
 
-    const handlePopoverOpen = (e) => {
-        setAnchorEl(e.currentTarget);
-    };
+  const handlePopoverOpen = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
 
-    const handlePopoverClose = () => {
-        setAnchorEl(null);
-    };
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
 
-    return (
-        <>
-            <BaseAvatar 
-                {...stringAvatar(text)}
-                onMouseEnter={handlePopoverOpen}
-                onMouseLeave={handlePopoverClose}
-                onClick={onClick}
-            />
-            <Popover
-                sx={{ 
-                    pointerEvents:"none"
-                 }}
-                 open={open}
-                 anchorEl={anchorEl}
-                 anchorOrigin={{ 
-                    vertical:'bottom',
-                    horizontal:'left'
-                  }}
-                  transformOrigin={{ 
-                    vertical:'top',
-                    horizontal:'left'
-                   }}
-                   onClose={handlePopoverClose}
-                   disableRestoreFocus
-            >
-                <Box sx={{ 
-                    padding:1
-                 }}>
-                    <Typography>{text}</Typography>
-                </Box>
-            </Popover>
-        </>
-    )
-}
+  return (
+    <>
+      <BaseAvatar
+        {...stringAvatar(text)}
+        onMouseEnter={handlePopoverOpen}
+        onMouseLeave={handlePopoverClose}
+        onClick={onClick}
+      />
+      <Popover
+        sx={{
+          pointerEvents: 'none',
+        }}
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        onClose={handlePopoverClose}
+        disableRestoreFocus
+      >
+        <Box
+          sx={{
+            padding: 1,
+          }}
+        >
+          <Typography>{text}</Typography>
+        </Box>
+      </Popover>
+    </>
+  );
+};
 
 export default Avatar;
