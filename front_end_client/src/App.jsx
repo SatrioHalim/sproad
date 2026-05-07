@@ -86,6 +86,15 @@ const router = createBrowserRouter([
     path: '/projects/:id',
     element: <DetailProject />,
   },
+  {
+    path: '/projects',
+    element: <DetailProject />,
+  },
+  {
+    path: '/settings',
+    element: <Typography>Pengaturan</Typography>,
+  },
+  
 ]);
 
 const App = () => {
