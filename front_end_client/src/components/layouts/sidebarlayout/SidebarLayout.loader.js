@@ -1,11 +1,12 @@
-import session from "@/utils/session";
-import { redirect } from "react-router";
+import { redirect } from 'react-router';
 
-export default function sidebarLoader(){
-    const isAuthenticated = session.isAuthenticated();
+import session from '@/utils/session';
 
-    if(!isAuthenticated){
-        return redirect('/login');
-    }
-    return null;
+export default function sidebarLoader() {
+  const isAuthenticated = session.isAuthenticated();
+
+  if (!isAuthenticated) {
+    return redirect('/login');
+  }
+  return null;
 }

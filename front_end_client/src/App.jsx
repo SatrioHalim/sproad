@@ -1,8 +1,6 @@
 import {
-  Box,
   createTheme,
   CssBaseline,
-  Link,
   ThemeProvider,
   Typography,
 } from '@mui/material';
@@ -10,13 +8,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 
+import authLoader from './components/layouts/authlayout/AuthLayout.loader';
+import sidebarLoader from './components/layouts/sidebarlayout/SidebarLayout.loader';
 import Login from './components/page/auth/login';
 import Dashboard from './components/page/dashboard/Dashboard';
 import DetailProject from './components/page/projects/detail_project';
-import Pagination from './components/ui/pagination';
-import Table from './components/ui/table/Table';
-import sidebarLoader from './components/layouts/sidebarlayout/SidebarLayout.loader';
-import authLoader from './components/layouts/authlayout/AuthLayout.loader';
 
 const theme = createTheme({
   typography: {
@@ -27,7 +23,7 @@ const theme = createTheme({
 const router = createBrowserRouter([
   {
     path: '/',
-    loader:sidebarLoader,
+    loader: sidebarLoader,
     element: <Dashboard />,
   },
   {

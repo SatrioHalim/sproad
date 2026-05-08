@@ -1,7 +1,6 @@
-import { Box, Button, colors, Paper, Typography } from '@mui/material';
+import { colors, Paper, Typography } from '@mui/material';
 import { useState } from 'react';
 
-import Modal from '../../ui/modal';
 import SidebarLayout from '../../layouts/sidebarlayout';
 
 const Dashboard = () => {
@@ -12,10 +11,10 @@ const Dashboard = () => {
   return (
     <SidebarLayout pageTitle={'Dashboard'}>
       <Paper
-        sx={{ 
-          padding:2,
-          background:colors.lightBlue[100]
-         }}
+        sx={{
+          padding: 2,
+          background: colors.lightBlue[100],
+        }}
       >
         <Typography>Menampilkan dashboard</Typography>
       </Paper>

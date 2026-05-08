@@ -1,11 +1,11 @@
 import { AccountCircle } from '@mui/icons-material';
 import { Box, Stack } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import Dropdown from '../../../ui/dropdown';
 import { useNavigate } from 'react-router';
+
+import Dropdown from '../../../ui/dropdown';
+
 import session from '@/utils/session';
-
-
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -22,11 +22,13 @@ const Navbar = () => {
         zIndex: 1100,
       }}
     >
-      <Stack sx={{ 
-        justifyContent:'center',
-        alignItems:'flex-end',
-        paddingX:1
-       }}>
+      <Stack
+        sx={{
+          justifyContent: 'center',
+          alignItems: 'flex-end',
+          paddingX: 1,
+        }}
+      >
         <Dropdown
           icon={<AccountCircle />}
           options={[
