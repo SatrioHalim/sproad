@@ -1,70 +1,48 @@
-import { Paper, Stack } from '@mui/material';
-import dayjs from 'dayjs';
-import { useForm } from 'react-hook-form';
-
-import DatePicker from '@/components/ui/forms/datepicker';
-import Select from '@/components/ui/forms/select';
-import TextField from '@/components/ui/forms/textfield';
+import AuthLayout from "@/components/layouts/authlayout";
+import TextField from "@/components/ui/forms/textfield";
+import session from "@/utils/session";
+import { Button, Paper, Stack, Typography } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 
 const Login = () => {
-  const { control, watch } = useForm({
-    defaultValues: {
-      username: '',
-      category: '',
-      filterDate: dayjs(),
-    },
-  });
-  const username = watch('username');
-  const category = watch('category');
-  const filterDate = watch('filterDate');
 
-  console.log(`username : ${username}`);
-  console.log(`category : ${category}`);
-  console.log(`filterDate : ${filterDate}`);
-
-  return (
-    <Stack
-      spacing={2}
-      sx={{
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
-      }}
-    >
-      <Paper
-        sx={{
-          width: 600,
-          padding: 2,
-        }}
-      >
-        <DatePicker
-          name={'filterDate'}
-          control={control}
-          label={'Pilih tanggal'}
-        />
-        <TextField name={'username'} control={control} label={'Username'} />
-        <Select
-          name={'category'}
-          control={control}
-          label={'Pilih Kategori'}
-          options={[
-            {
-              value: 'Kategori 1',
-              label: 'Kategori 1',
-            },
-            {
-              value: 'Kategori 2',
-              label: 'Kategori 2',
-            },
-            {
-              value: 'Kategori 3',
-              label: 'Kategori 3',
-            },
-          ]}
-        />
-      </Paper>
-    </Stack>
-  );
-};
+    const navigate = useNavigate();
+    
+    const {control,handleSubmit} = useForm();
+    const onSubmit = (formValues) => {
+        console.log(`Login form submitted with values:`, formValues);
+        session.setSession('dummy-token');
+        navigate('/');
+    }
+    return (
+        <AuthLayout>
+            
+            <Paper sx={{ 
+                padding:2,
+                width:500
+             }}>
+                <Typography variant="h5" component={"h1"} align="center" sx={{ 
+                    marginBottom:2
+                 }}>Login</Typography>
+                 <Stack sx={{ 
+                    flexDirection:'column',
+                    gap:1,
+                  }} component={"form"} onSubmit={handleSubmit(onSubmit)}>
+                    <TextField label={"Email"} control={control} name={"email"}></TextField>
+                    <TextField label={"Password"} control={control} name={"password"} type="password"></TextField>
+                    <Button type="submit" variant="contained" fullWidth>
+                        Login to your account
+                    </Button>
+                    <Button type="button" variant="text" fullWidth onClick={() => {
+                        navigate('/signup')
+                    }}>
+                        Don't have an account? Register here
+                    </Button>
+                 </Stack>
+            </Paper>
+        </AuthLayout>
+    )
+}
 
 export default Login;

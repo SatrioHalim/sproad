@@ -15,6 +15,8 @@ import Dashboard from './components/page/dashboard/Dashboard';
 import DetailProject from './components/page/projects/detail_project';
 import Pagination from './components/ui/pagination';
 import Table from './components/ui/table/Table';
+import sidebarLoader from './components/layouts/sidebarlayout/SidebarLayout.loader';
+import authLoader from './components/layouts/authlayout/AuthLayout.loader';
 
 const theme = createTheme({
   typography: {
@@ -25,76 +27,29 @@ const theme = createTheme({
 const router = createBrowserRouter([
   {
     path: '/',
-    element: (
-      <Box>
-        <Table
-          columns={[
-            {
-              id: 'tugas',
-              label: 'Tugas',
-            },
-            {
-              id: 'status',
-              label: 'Status',
-            },
-          ]}
-          data={[
-            {
-              id: 1,
-              tugas: 'Tugas 1',
-              status: 'Baru',
-            },
-            {
-              id: 2,
-              tugas: 'Tugas 2',
-              status: 'On-going',
-            },
-            {
-              id: 3,
-              tugas: 'Tugas 3',
-              status: 'Done',
-            },
-          ]}
-        />
-        <Pagination
-          count={10}
-          onChange={(event, page) => {
-            console.log('page: ', page);
-          }}
-        />
-      </Box>
-    ),
-  },
-  {
-    path: '/link',
-    element: (
-      <Box>
-        <Typography variant="h1">Login</Typography>
-        <Link to={'/'}>Back to Home</Link>
-      </Box>
-    ),
-  },
-  {
-    path: '/dashboard',
+    loader:sidebarLoader,
     element: <Dashboard />,
   },
   {
     path: '/login',
+    loader: authLoader,
     element: <Login />,
   },
   {
     path: '/projects/:id',
+    loader: sidebarLoader,
     element: <DetailProject />,
   },
   {
     path: '/projects',
+    loader: sidebarLoader,
     element: <DetailProject />,
   },
   {
     path: '/settings',
+    loader: sidebarLoader,
     element: <Typography>Pengaturan</Typography>,
   },
-  
 ]);
 
 const App = () => {
