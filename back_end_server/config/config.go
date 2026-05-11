@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -28,6 +29,7 @@ type Config struct {
 	JWTRefreshToken string
 	JWTExpire string
 	AppURL string
+	CORSAllowOrigins []string
 	Env string
 }
 
@@ -47,6 +49,10 @@ func LoadEnv(){
 		JWTRefreshToken: getEnv("REFRESH_TOKEN_EXPIRED","24h"),
 		JWTExpire: getEnv("JWT_EXPIRED","6h"),
 		AppURL: getEnv("APP_URL","http://localhost:3030"),
+		CORSAllowOrigins: getEnvAsSlice("CORS_ALLOW_ORIGINS", []string{
+			"http://localhost:5173",
+			"http://127.0.0.1:5173",
+		}),
 		Env: getEnv("ENV","development"),
 	}
 }
@@ -58,6 +64,28 @@ func getEnv(key string, fallback string) string {
 	} else {
 		return fallback
 	}
+}
+
+func getEnvAsSlice(key string, fallback []string) []string {
+	value, exist := os.LookupEnv(key)
+	if !exist || strings.TrimSpace(value) == "" {
+		return fallback
+	}
+
+	parts := strings.Split(value, ",")
+	result := make([]string, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed != "" {
+			result = append(result, trimmed)
+		}
+	}
+
+	if len(result) == 0 {
+		return fallback
+	}
+
+	return result
 }
 
 func ConnectDB(){

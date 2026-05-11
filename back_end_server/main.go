@@ -11,6 +11,7 @@ import (
 	"github.com/SatrioHalim/Go-x-React-Journey/services"
 	"github.com/SatrioHalim/Go-x-React-Journey/utils"
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 )
 
 func main() {
@@ -23,6 +24,11 @@ func main() {
 
 	seed.SeedAdmin()
 	app := fiber.New()
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: config.AppConfig.CORSAllowOrigins,
+		AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization"},
+	}))
 
 	// User handling
 	userRepo := repositories.NewUserRepository()
