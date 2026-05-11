@@ -5,7 +5,7 @@ const TextField = ({
   control,
   name,
   label,
-  defaultValue,
+  defaultValue = '',
   helperText,
   ...props
 }) => {
@@ -13,7 +13,7 @@ const TextField = ({
     <Controller
       name={name}
       control={control}
-      defaultValue={defaultValue}
+      defaultValue={defaultValue || ''}
       render={({ field: { value, onChange, onBlur } }) => {
         return (
           <Box

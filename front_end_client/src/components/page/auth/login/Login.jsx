@@ -5,16 +5,34 @@ import { useNavigate } from 'react-router';
 import AuthLayout from '@/components/layouts/authlayout';
 import TextField from '@/components/ui/forms/textfield';
 import session from '@/utils/session';
+import { useState } from 'react';
+import services from '@/services';
 
 const Login = () => {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const { control, handleSubmit } = useForm();
-  const onSubmit = (formValues) => {
-    console.log(`Login form submitted with values:`, formValues);
-    session.setSession('dummy-token');
-    navigate('/');
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const onSubmit = async (formValues) => {
+    setLoading(true);
+    try {
+      const response = await services.auth.login(formValues);
+      session.setSession(response.data.data.access_token);
+      navigate('/');
+    } catch (error) {
+      // console.error('Login failed:', error);
+      alert('Login failed. Please check your credentials and try again.');
+    } finally {
+      setLoading(false);
+    }
   };
+
   return (
     <AuthLayout>
       <Paper
