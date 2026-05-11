@@ -1,5 +1,5 @@
-import auth from "./api/api";
+import auth from './api/api';
 
 export default {
-    auth
-}
+  auth,
+};

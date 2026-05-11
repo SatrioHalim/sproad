@@ -1,19 +1,20 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Paper, Stack, Typography } from '@mui/material';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
+import * as Yup from 'yup';
 
 import AuthLayout from '@/components/layouts/authlayout';
 import TextField from '@/components/ui/forms/textfield';
-import session from '@/utils/session';
-import { useState } from 'react';
 import services from '@/services';
-import {yupResolver} from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
+import session from '@/utils/session';
+
 
 const loginSchema = Yup.object({
-  email:Yup.string().required().email(),
-  password:Yup.string().required()
-})
+  email: Yup.string().required().email(),
+  password: Yup.string().required(),
+});
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -24,7 +25,7 @@ const Login = () => {
       email: '',
       password: '',
     },
-    resolver:yupResolver(loginSchema)
+    resolver: yupResolver(loginSchema),
   });
 
   const onSubmit = async (formValues) => {
@@ -35,7 +36,7 @@ const Login = () => {
       navigate('/');
     } catch (error) {
       // console.error('Login failed:', error);
-      alert('Login failed. Please check your credentials and try again.');
+      alert(`login failed : ${error.response?.data?.message || error.message}`);
     } finally {
       setLoading(false);
     }

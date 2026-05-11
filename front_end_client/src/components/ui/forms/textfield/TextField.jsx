@@ -1,5 +1,12 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { TextField as BaseTextField, Box, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
+import {
+  FormControl,
+  FormHelperText,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
@@ -13,24 +20,26 @@ const TextField = ({
   secureText = false,
   ...props
 }) => {
-
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(()=>{
-    setShowPassword(secureText)
-  },[secureText])
+  useEffect(() => {
+    setShowPassword(secureText);
+  }, [secureText]);
   return (
     <Controller
       name={name}
       control={control}
       defaultValue={defaultValue || ''}
-      render={({ field: { value, onChange, onBlur },fieldState:{error} }) => {
+      render={({
+        field: { value, onChange, onBlur },
+        fieldState: { error },
+      }) => {
         return (
           <FormControl
             sx={{
               marginBottom: 2,
             }}
-            variant='outlined'
+            variant="outlined"
           >
             <InputLabel htmlFor={id}>{label}</InputLabel>
             <OutlinedInput
@@ -45,17 +54,28 @@ const TextField = ({
               error={Boolean(error)}
               endAdornment={
                 secureText ? (
-                  <InputAdornment position='end'>
-                  <IconButton onClick={()=>{setShowPassword(!showPassword)}} edge='end'>
-                    {showPassword ? <VisibilityOff></VisibilityOff>: <Visibility></Visibility>}
-                  </IconButton>
-                </InputAdornment>
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => {
+                        setShowPassword(!showPassword);
+                      }}
+                      edge="end"
+                    >
+                      {showPassword ? (
+                        <VisibilityOff />
+                      ) : (
+                        <Visibility />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
                 ) : (
                   <></>
                 )
               }
             />
-            <FormHelperText error={Boolean(error)}>{error ?.message ? error?.message : helperText}</FormHelperText>
+            <FormHelperText error={Boolean(error)}>
+              {error?.message ? error?.message : helperText}
+            </FormHelperText>
           </FormControl>
         );
       }}
