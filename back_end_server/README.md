@@ -130,6 +130,7 @@ DB_PASSWORD=[Your password]
 DB_NAME=[Your DB name]
 
 APP_URL=http://localhost:3030 // local
+CORS_ALLOW_ORIGINS=[client host]
 
 JWT_SECRET=[Your jwt secret]
 JWT_EXPIRED=2h
@@ -141,6 +142,8 @@ ADMIN_ROLE=admin
 
 ENV=development
 ```
+
+`CORS_ALLOW_ORIGINS` accepts a comma-separated list of allowed frontend origins. This is useful for local development when your client and API run on different hosts or ports.
 
 ## Getting Started
 
