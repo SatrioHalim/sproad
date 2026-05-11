@@ -7,6 +7,13 @@ import TextField from '@/components/ui/forms/textfield';
 import session from '@/utils/session';
 import { useState } from 'react';
 import services from '@/services';
+import {yupResolver} from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
+
+const loginSchema = Yup.object({
+  email:Yup.string().required().email(),
+  password:Yup.string().required()
+})
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -17,6 +24,7 @@ const Login = () => {
       email: '',
       password: '',
     },
+    resolver:yupResolver(loginSchema)
   });
 
   const onSubmit = async (formValues) => {
@@ -64,7 +72,7 @@ const Login = () => {
             label={'Password'}
             control={control}
             name={'password'}
-            type="password"
+            secureText
           />
           <Button type="submit" variant="contained" fullWidth>
             Login to your account
