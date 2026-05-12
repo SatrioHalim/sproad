@@ -32,6 +32,10 @@ func (s *userService)Register(user *models.User) error{
 	if existingUser.InternalID != 0 {
 		return errors.New("email already registered")
 	}
+
+	if user.Password == "" {
+		return errors.New("password is required")
+	}
 	hashed, err := utils.HashPassword(user.Password)
 	if err != nil {
 		return err
@@ -49,7 +53,7 @@ func (s *userService) Login(email,password string)(*models.User,error){
 		return nil,errors.New("invalid credential")
 	}
 	if !utils.CheckPasswordHash(password,user.Password){
-		return nil,errors.New("invalid creadential")
+		return nil,errors.New("invalid credential")
 	}
 	return user,nil
 }
