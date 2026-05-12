@@ -8,16 +8,21 @@ import * as Yup from 'yup';
 import AuthLayout from '@/components/layouts/authlayout';
 import TextField from '@/components/ui/forms/textfield';
 import services from '@/services';
-import session from '@/utils/session';
+import Dialog from '@/components/ui/dialog';
 
 
-const loginSchema = Yup.object({
+const registerSchema = Yup.object({
+    name: Yup.string().required('Name is required'),
   email: Yup.string().required('Email is required').email('Invalid email format'),
   password: Yup.string().required('Password is required'),
+  confirmPassword: Yup.string().required('Confirm Password is required').oneOf([Yup.ref('password'), null], 'Passwords must match'),
 });
 
-const Login = () => {
+const Register = () => {
   const [loading, setLoading] = useState(false);
+  const[openDialog, setOpenDialog] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState({title: '', message: ''});
+  const [dialogActions, setDialogActions] = useState([]);
   const navigate = useNavigate();
 
   const { control, handleSubmit } = useForm({
@@ -25,18 +30,28 @@ const Login = () => {
       email: '',
       password: '',
     },
-    resolver: yupResolver(loginSchema),
+    resolver: yupResolver(registerSchema),
   });
 
   const onSubmit = async (formValues) => {
     setLoading(true);
     try {
-      const response = await services.auth.login(formValues);
-      session.setSession(response.data.data.access_token);
-      navigate('/');
+      const response = await services.auth.register(formValues);
+      navigate('/login');
     } catch (error) {
-      // console.error('Login failed:', error);
-      alert(`login failed : ${error.response?.data?.message || error.message}`);
+        setOpenDialog(true);
+        setDialogMessage({
+            title: 'Registration Failed',
+            message: error?.response?.data?.message ?? "An error occurred during registration. Please try again.",
+        });
+        setDialogActions([
+            {
+                label:'Understand',
+                onClick(){
+                    setOpenDialog(false);
+                }
+            }
+        ])
     } finally {
       setLoading(false);
     }
@@ -58,7 +73,7 @@ const Login = () => {
             marginBottom: 2,
           }}
         >
-          Login
+          Register
         </Typography>
         <Stack
           sx={{
@@ -68,6 +83,7 @@ const Login = () => {
           component={'form'}
           onSubmit={handleSubmit(onSubmit)}
         >
+          <TextField id={"name"} label={'Name'} control={control} name={'name'} />
           <TextField id={"email"} label={'Email'} control={control} name={'email'} />
           <TextField
             id={"password"}
@@ -76,23 +92,31 @@ const Login = () => {
             name={'password'}
             secureText
           />
+          <TextField
+            id={"confirmPassword"}
+            label={'Confirm Password'}
+            control={control}
+            name={'confirmPassword'}
+            secureText
+          />
           <Button type="submit" variant="contained" fullWidth loading={loading}>
-            Login to your account
+            Register for an account
           </Button>
           <Button
             type="button"
             variant="text"
             fullWidth
             onClick={() => {
-              navigate('/register');
+              navigate('/login');
             }}
           >
-            Don&apos;t have an account? Register here
+            Already have an account? Login here
           </Button>
         </Stack>
       </Paper>
+      <Dialog open={openDialog} actions={dialogActions} {...dialogMessage}></Dialog>
     </AuthLayout>
   );
 };
 
-export default Login;
+export default Register;

@@ -13,6 +13,7 @@ import sidebarLoader from './components/layouts/sidebarlayout/SidebarLayout.load
 import Login from './components/page/auth/login';
 import Dashboard from './components/page/dashboard/Dashboard';
 import DetailProject from './components/page/projects/detail_project';
+import Register from './components/page/auth/register';
 
 const theme = createTheme({
   typography: {
@@ -30,6 +31,11 @@ const router = createBrowserRouter([
     path: '/login',
     loader: authLoader,
     element: <Login />,
+  },
+  {
+    path: '/register',
+    loader: authLoader,
+    element: <Register />,
   },
   {
     path: '/projects/:id',
