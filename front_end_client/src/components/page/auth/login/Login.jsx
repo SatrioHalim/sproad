@@ -10,9 +10,10 @@ import TextField from '@/components/ui/forms/textfield';
 import services from '@/services';
 import session from '@/utils/session';
 
-
 const loginSchema = Yup.object({
-  email: Yup.string().required('Email is required').email('Invalid email format'),
+  email: Yup.string()
+    .required('Email is required')
+    .email('Invalid email format'),
   password: Yup.string().required('Password is required'),
 });
 
@@ -68,9 +69,14 @@ const Login = () => {
           component={'form'}
           onSubmit={handleSubmit(onSubmit)}
         >
-          <TextField id={"email"} label={'Email'} control={control} name={'email'} />
           <TextField
-            id={"password"}
+            id={'email'}
+            label={'Email'}
+            control={control}
+            name={'email'}
+          />
+          <TextField
+            id={'password'}
             label={'Password'}
             control={control}
             name={'password'}

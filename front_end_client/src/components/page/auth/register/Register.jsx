@@ -6,22 +6,28 @@ import { useNavigate } from 'react-router';
 import * as Yup from 'yup';
 
 import AuthLayout from '@/components/layouts/authlayout';
+import Dialog from '@/components/ui/dialog';
 import TextField from '@/components/ui/forms/textfield';
 import services from '@/services';
-import Dialog from '@/components/ui/dialog';
-
 
 const registerSchema = Yup.object({
-    name: Yup.string().required('Name is required'),
-  email: Yup.string().required('Email is required').email('Invalid email format'),
+  name: Yup.string().required('Name is required'),
+  email: Yup.string()
+    .required('Email is required')
+    .email('Invalid email format'),
   password: Yup.string().required('Password is required'),
-  confirmPassword: Yup.string().required('Confirm Password is required').oneOf([Yup.ref('password'), null], 'Passwords must match'),
+  confirmPassword: Yup.string()
+    .required('Confirm Password is required')
+    .oneOf([Yup.ref('password'), null], 'Passwords must match'),
 });
 
 const Register = () => {
   const [loading, setLoading] = useState(false);
-  const[openDialog, setOpenDialog] = useState(false);
-  const [dialogMessage, setDialogMessage] = useState({title: '', message: ''});
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState({
+    title: '',
+    message: '',
+  });
   const [dialogActions, setDialogActions] = useState([]);
   const navigate = useNavigate();
 
@@ -39,19 +45,21 @@ const Register = () => {
       const response = await services.auth.register(formValues);
       navigate('/login');
     } catch (error) {
-        setOpenDialog(true);
-        setDialogMessage({
-            title: 'Registration Failed',
-            message: error?.response?.data?.message ?? "An error occurred during registration. Please try again.",
-        });
-        setDialogActions([
-            {
-                label:'Understand',
-                onClick(){
-                    setOpenDialog(false);
-                }
-            }
-        ])
+      setOpenDialog(true);
+      setDialogMessage({
+        title: 'Registration Failed',
+        message:
+          error?.response?.data?.message ??
+          'An error occurred during registration. Please try again.',
+      });
+      setDialogActions([
+        {
+          label: 'Understand',
+          onClick() {
+            setOpenDialog(false);
+          },
+        },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -83,17 +91,27 @@ const Register = () => {
           component={'form'}
           onSubmit={handleSubmit(onSubmit)}
         >
-          <TextField id={"name"} label={'Name'} control={control} name={'name'} />
-          <TextField id={"email"} label={'Email'} control={control} name={'email'} />
           <TextField
-            id={"password"}
+            id={'name'}
+            label={'Name'}
+            control={control}
+            name={'name'}
+          />
+          <TextField
+            id={'email'}
+            label={'Email'}
+            control={control}
+            name={'email'}
+          />
+          <TextField
+            id={'password'}
             label={'Password'}
             control={control}
             name={'password'}
             secureText
           />
           <TextField
-            id={"confirmPassword"}
+            id={'confirmPassword'}
             label={'Confirm Password'}
             control={control}
             name={'confirmPassword'}
@@ -114,7 +132,11 @@ const Register = () => {
           </Button>
         </Stack>
       </Paper>
-      <Dialog open={openDialog} actions={dialogActions} {...dialogMessage}></Dialog>
+      <Dialog
+        open={openDialog}
+        actions={dialogActions}
+        {...dialogMessage}
+       />
     </AuthLayout>
   );
 };

@@ -11,9 +11,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 import authLoader from './components/layouts/authlayout/AuthLayout.loader';
 import sidebarLoader from './components/layouts/sidebarlayout/SidebarLayout.loader';
 import Login from './components/page/auth/login';
+import Register from './components/page/auth/register';
 import Dashboard from './components/page/dashboard/Dashboard';
 import DetailProject from './components/page/projects/detail_project';
-import Register from './components/page/auth/register';
 
 const theme = createTheme({
   typography: {
