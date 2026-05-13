@@ -15,10 +15,10 @@ const session = {
     const session = localStorage.getItem(SESSION_KEY);
     return !!session;
   },
-  getToken(){
+  getToken() {
     const session = this.getSession();
     return session?.access_token ?? null;
-  }
+  },
 };
 
 export default session;

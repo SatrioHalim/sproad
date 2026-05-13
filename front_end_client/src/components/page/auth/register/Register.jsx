@@ -132,11 +132,7 @@ const Register = () => {
           </Button>
         </Stack>
       </Paper>
-      <Dialog
-        open={openDialog}
-        actions={dialogActions}
-        {...dialogMessage}
-       />
+      <Dialog open={openDialog} actions={dialogActions} {...dialogMessage} />
     </AuthLayout>
   );
 };

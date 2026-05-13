@@ -13,8 +13,8 @@ import sidebarLoader from './components/layouts/sidebarlayout/SidebarLayout.load
 import Login from './components/page/auth/login';
 import Register from './components/page/auth/register';
 import Dashboard from './components/page/dashboard/Dashboard';
-import DetailProject from './components/page/projects/detail_project';
 import Projects from './components/page/projects';
+import DetailProject from './components/page/projects/detail_project';
 
 const theme = createTheme({
   typography: {
