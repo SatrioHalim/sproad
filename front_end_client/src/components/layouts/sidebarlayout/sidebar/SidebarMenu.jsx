@@ -22,14 +22,14 @@ const SidebarMenu = () => {
           <ListItemIcon>
             <Book fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Daftar Proyek</ListItemText>
+          <ListItemText>Project</ListItemText>
         </MenuItem>
         <Divider />
         <MenuItem onClick={() => navigate('/settings')}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Pengaturan</ListItemText>
+          <ListItemText>Settings</ListItemText>
         </MenuItem>
       </MenuList>
     </Box>

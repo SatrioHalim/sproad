@@ -14,6 +14,7 @@ import Login from './components/page/auth/login';
 import Register from './components/page/auth/register';
 import Dashboard from './components/page/dashboard/Dashboard';
 import DetailProject from './components/page/projects/detail_project';
+import Projects from './components/page/projects';
 
 const theme = createTheme({
   typography: {
@@ -45,7 +46,7 @@ const router = createBrowserRouter([
   {
     path: '/projects',
     loader: sidebarLoader,
-    element: <DetailProject />,
+    element: <Projects />,
   },
   {
     path: '/settings',

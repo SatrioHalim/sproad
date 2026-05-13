@@ -24,9 +24,7 @@ const Projects = () => {
 
     const fetchBoardsData = async () => {
       setLoading(true);
-      const response = await services.boards.myBoards({
-        filter: debounceSearch
-      });
+      const response = await services.boards.myBoards();
       setBoardsData(response.data.data);
       setLoading(false);
     }
@@ -37,7 +35,7 @@ const Projects = () => {
  
   return (
     <SidebarLayout
-      pageTitle="Project Detail"
+      pageTitle="Project List"
       breadcrumbs={[
         {
           label: 'Project List',
@@ -50,15 +48,15 @@ const Projects = () => {
         columns={[
           {
             id: 'title',
-            label: 'Nama proyek'
+            label: 'Project Name'
           },
           {
             id: 'description',
-            label: 'Deskripsi'
+            label: 'Description'
           },
           {
-            id: 'title',
-            label: 'Tanggal dibuat',
+            id: 'date',
+            label: 'Created At',
             render(data) {
               return (
                 <Box>{datetime.format(data.created_at, "DD/MM/YYYY")}</Box>
@@ -66,13 +64,13 @@ const Projects = () => {
             },
           },
           {
-            id: 'title',
-            label: 'Aksi',
+            id: 'action',
+            label: 'Actions',
             render(data) {
               return (
                 <Link to={`/projects/${data.public_id}`}>
                   <Button type="button" variant='outlined'>
-                    Detail proyek
+                    Detail Project
                   </Button>
                 </Link>
               )

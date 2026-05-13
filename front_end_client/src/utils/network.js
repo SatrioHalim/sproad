@@ -9,7 +9,7 @@ const network = axios.create({
 // buat nambahin token ke header setiap request
 network.interceptors.request.use(
   (config) => {
-    const token = session.getSession();
+    const token = session.getToken();
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

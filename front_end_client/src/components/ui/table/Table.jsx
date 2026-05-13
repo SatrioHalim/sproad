@@ -30,9 +30,9 @@ const Table = ({ columns, data }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row) => (
+          {data.map((row, rowIndex) => (
             <TableRow
-              key={row.id}
+              key={row.public_id ?? row.id ?? rowIndex}
               sx={{ '&:last-child td, &last-child th': { border: 0 } }}
             >
               {columns.map((column) => (
