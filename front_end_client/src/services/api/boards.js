@@ -1,8 +1,8 @@
 import network from '@/utils/network';
 
 const boards = {
-  async myBoards() {
-    return network.get('/api/v1/boards/my');
+  async myBoards(params) {
+    return network.get('/api/v1/boards/my', { params });
   },
 };
 
