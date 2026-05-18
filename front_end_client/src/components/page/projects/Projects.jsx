@@ -8,11 +8,14 @@ import TextField from '@/components/ui/forms/textfield';
 import Table from '@/components/ui/table';
 import services from '@/services';
 import datetime from '@/utils/datetime';
+import Pagination from '@/components/ui/pagination';
 
 const Projects = () => {
   // loading
   const [isLoading, setLoading] = useState(false);
   const [boardsData, setBoardsData] = useState([]);
+  const [boardsMeta, setBoardsMeta] = useState({});
+  const [page, setPage] = useState(1);
 
   const { control } = useForm({
     defaultValues: {
@@ -34,13 +37,16 @@ const Projects = () => {
       setLoading(true);
       const response = await services.boards.myBoards({
         filter: debouncedSearch,
+        limit:5,
+        page
       });
       setBoardsData(response.data.data);
+      setBoardsMeta(response.data.meta);
       setLoading(false);
     };
 
     fetchBoardsData();
-  }, [debouncedSearch]); // onMounted
+  }, [debouncedSearch,page]); // onMounted
 
   return (
     <SidebarLayout
@@ -98,6 +104,12 @@ const Projects = () => {
           },
         ]}
       />
+      <Pagination
+      count={boardsMeta.total_pages}
+      onChange={(e,page)=>{
+        setPage(page);
+      }}
+      ></Pagination>
     </SidebarLayout>
   );
 };
