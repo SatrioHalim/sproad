@@ -131,6 +131,7 @@ func (c *BoardController) GetMyBoardPaginate(ctx fiber.Ctx) error {
 		Total: int(total),
 		TotalPage: int(math.Ceil(float64(total) / float64(limit))),
 		Sort: sort,
+		Filter: filter,
 	}
 
 	if len(boards) == 0 {
