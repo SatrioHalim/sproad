@@ -10,18 +10,14 @@ import {
   TableRow,
 } from '@mui/material';
 
-const Table = ({ columns, data, isLoading}) => {
+const Table = ({ columns, data, isLoading }) => {
   if ((!columns || !data || data.length == 0) && !isLoading) {
     return <Box>Data tidak tersedia</Box>;
   }
 
   return (
     <TableContainer component={Paper}>
-      {
-        isLoading && (
-          <LinearProgress></LinearProgress>
-        )
-      }
+      {isLoading && <LinearProgress />}
       <BaseTable sx={{ minWidth: 650 }}>
         <TableHead>
           <TableRow>

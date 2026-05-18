@@ -1,8 +1,4 @@
-import {
-  Box,
-  Button,
-  Link,
-} from '@mui/material';
+import { Box, Button, Link } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 

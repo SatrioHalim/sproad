@@ -1,29 +1,23 @@
-import {
-  Box,
-  Button,
-  Link,
-  Stack,
-} from '@mui/material';
+import { Box, Button, Link, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
+import { useDebounce } from 'use-debounce';
 
 import SidebarLayout from '@/components/layouts/sidebarlayout';
+import TextField from '@/components/ui/forms/textfield';
 import Table from '@/components/ui/table';
 import services from '@/services';
 import datetime from '@/utils/datetime';
-import TextField from '@/components/ui/forms/textfield';
-import { useDebounce } from 'use-debounce'
 
 const Projects = () => {
   // loading
   const [isLoading, setLoading] = useState(false);
   const [boardsData, setBoardsData] = useState([]);
 
-  
-  const {control} = useForm({
-    defaultValues:{
+  const { control } = useForm({
+    defaultValues: {
       search: '',
-    }
+    },
   });
 
   const watchSearch = useWatch({
@@ -60,12 +54,12 @@ const Projects = () => {
       <Stack>
         <Box>
           <TextField
-          control={control}
-            label={"Find project name"}
-            id={"search"}
-            name={"search"}
-            size={"small"}
-          ></TextField>
+            control={control}
+            label={'Find project name'}
+            id={'search'}
+            name={'search'}
+            size={'small'}
+           />
         </Box>
       </Stack>
       <Table
