@@ -9,6 +9,7 @@ import DatePicker from "@/components/ui/forms/datepicker"
 import datetime from "@/utils/datetime"
 import { useState } from "react"
 import services from "@/services"
+import { useSnackbar } from "@/components/ui/snackbar"
 
 const addNewProjectSchema = Yup.object({
     title: Yup.string().required(),
@@ -20,6 +21,7 @@ const ModalAddNewProject = ({
     open, handleClose
 }) => {
     const [isLoading, setIsLoading] = useState(false);
+    const snackbar = useSnackbar();
     const {
         control,
         handleSubmit,
@@ -40,6 +42,7 @@ const ModalAddNewProject = ({
             due_date:datetime.getIsoString(values.due_date)
         });
 
+        snackbar.toggleSnackbar(true, "Project created successfully");
         setIsLoading(false);
         reset();
         handleClose();

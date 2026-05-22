@@ -34,8 +34,7 @@ const Projects = () => {
 
   console.log('debounced search', debouncedSearch);
 
-  useEffect(() => {
-    const fetchBoardsData = async () => {
+  const fetchBoardsData = async () => {
       setLoading(true);
       const response = await services.boards.myBoards({
         filter: debouncedSearch,
@@ -47,13 +46,17 @@ const Projects = () => {
       setLoading(false);
     };
 
+  useEffect(() => {
+    
+
     fetchBoardsData();
   }, [debouncedSearch,page]); // onMounted
 
   const handleOpenAddNewProject = () => {
     setOpenModalAddNewProject(true);
   }
-  const handleCloseAddNewProject = () => {
+  const handleCloseAddNewProject = async () => {
+    await fetchBoardsData();
     setOpenModalAddNewProject(false);
   }
 
