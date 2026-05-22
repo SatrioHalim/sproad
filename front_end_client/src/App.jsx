@@ -62,7 +62,7 @@ const App = () => {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <SnackbarProvider>
           <CssBaseline />
-        <RouterProvider router={router} />
+          <RouterProvider router={router} />
         </SnackbarProvider>
       </LocalizationProvider>
     </ThemeProvider>
