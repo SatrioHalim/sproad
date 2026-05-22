@@ -9,6 +9,7 @@ import Table from '@/components/ui/table';
 import services from '@/services';
 import datetime from '@/utils/datetime';
 import Pagination from '@/components/ui/pagination';
+import ModalAddNewProject from './modals/ModalAddNewProject';
 
 const Projects = () => {
   // loading
@@ -16,6 +17,7 @@ const Projects = () => {
   const [boardsData, setBoardsData] = useState([]);
   const [boardsMeta, setBoardsMeta] = useState({});
   const [page, setPage] = useState(1);
+  const [openModalAddNewProject, setOpenModalAddNewProject] = useState(false);
 
   const { control } = useForm({
     defaultValues: {
@@ -48,7 +50,15 @@ const Projects = () => {
     fetchBoardsData();
   }, [debouncedSearch,page]); // onMounted
 
+  const handleOpenAddNewProject = () => {
+    setOpenModalAddNewProject(true);
+  }
+  const handleCloseAddNewProject = () => {
+    setOpenModalAddNewProject(false);
+  }
+
   return (
+    <>
     <SidebarLayout
       pageTitle="Project List"
       breadcrumbs={[
@@ -57,7 +67,10 @@ const Projects = () => {
         },
       ]}
     >
-      <Stack>
+      <Stack direction={'row'} sx={{ 
+        justifyContent:"space-between",
+        alignItems:"center"
+       }}>
         <Box>
           <TextField
             control={control}
@@ -66,6 +79,11 @@ const Projects = () => {
             name={'search'}
             size={'small'}
            />
+        </Box>
+        <Box>
+          <Button type='button' variant='contained' onClick={handleOpenAddNewProject}>
+            Add Project
+          </Button>
         </Box>
       </Stack>
       <Table
@@ -111,6 +129,8 @@ const Projects = () => {
       }}
       ></Pagination>
     </SidebarLayout>
+    <ModalAddNewProject open={openModalAddNewProject} handleClose={handleCloseAddNewProject}></ModalAddNewProject>
+    </>
   );
 };
 

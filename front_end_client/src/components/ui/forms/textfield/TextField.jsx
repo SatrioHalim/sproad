@@ -18,6 +18,8 @@ const TextField = ({
   helperText,
   id,
   secureText = false,
+  multiline = false,
+  rows,
   ...props
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -45,6 +47,8 @@ const TextField = ({
             <InputLabel htmlFor={id}>{label}</InputLabel>
             <OutlinedInput
               {...props}
+              multiline={multiline}
+              rows={rows}
               fullWidth
               label={label}
               variant="outlined"

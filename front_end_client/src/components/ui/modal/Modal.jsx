@@ -26,14 +26,14 @@ const Modal = ({ title, open, handleClose, sx, children, ...props }) => {
       >
         <Stack
           direction={'row'}
-          justifyContent={'space-between'}
-          alignItems={'center'}
           spacing={2}
           sx={{
             p: 2,
             borderTopLeftRadius: 4,
             borderTopRightRadius: 4,
             borderBottom: '1px solid #e0e0e0',
+            justifyContent: 'space-between',
+            alignItems: 'center',
           }}
         >
           <Typography variant={'h6'} component={'h2'}>
