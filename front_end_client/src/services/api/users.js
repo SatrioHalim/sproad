@@ -1,4 +1,4 @@
-import network from "@/utils/network";
+import network from '@/utils/network';
 
 const users = {
   async getUsers(params) {

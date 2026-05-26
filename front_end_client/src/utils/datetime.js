@@ -18,7 +18,7 @@ const datetime = {
     const start = dayjs(startDate).tz(TZ_ASIA_JAKARTA);
     const end = dayjs(endDate).tz(TZ_ASIA_JAKARTA);
     return end.diff(start, 'day') + 1;
-  }
+  },
 };
 
 export default datetime;

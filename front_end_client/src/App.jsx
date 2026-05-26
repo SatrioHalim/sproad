@@ -42,15 +42,16 @@ const router = createBrowserRouter([
   {
     path: '/projects',
     loader: sidebarLoader,
-    children:[
+    children: [
       {
         path: '/projects',
         element: <Projects />,
-      },{
+      },
+      {
         path: '/projects/:id',
         element: <DetailProject />,
       },
-    ]
+    ],
   },
   {
     path: '/settings',

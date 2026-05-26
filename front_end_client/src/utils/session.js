@@ -1,5 +1,4 @@
-import { ROLE_ADMIN, SESSION_KEY } from "./constants";
-
+import { ROLE_ADMIN, SESSION_KEY } from './constants';
 
 const session = {
   setSession(user) {
@@ -20,10 +19,10 @@ const session = {
     const session = this.getSession();
     return session?.access_token ?? null;
   },
-  isAdmin(){
+  isAdmin() {
     const session = this.getSession();
     return session?.user?.role === ROLE_ADMIN;
-  }
+  },
 };
 
 export default session;
