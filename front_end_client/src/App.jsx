@@ -40,14 +40,17 @@ const router = createBrowserRouter([
     element: <Register />,
   },
   {
-    path: '/projects/:id',
-    loader: sidebarLoader,
-    element: <DetailProject />,
-  },
-  {
     path: '/projects',
     loader: sidebarLoader,
-    element: <Projects />,
+    children:[
+      {
+        path: '/projects',
+        element: <Projects />,
+      },{
+        path: '/projects/:id',
+        element: <DetailProject />,
+      },
+    ]
   },
   {
     path: '/settings',

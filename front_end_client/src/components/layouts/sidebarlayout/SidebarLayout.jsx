@@ -44,6 +44,7 @@ const SidebarLayout = ({ children, pageTitle = '', breadcrumbs = [] }) => {
           marginTop: '4rem',
           paddingTop: 3,
           paddingRight: 3,
+          paddingBottom: 3,
           flexGrow: 1,
           flexShrink: 0,
           position: 'relative',
