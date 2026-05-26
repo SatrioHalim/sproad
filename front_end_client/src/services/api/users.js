@@ -1,7 +1,9 @@
-const users = {
-    async getUsers(params){
-        return network.get(`/api/v1/users/page`, { params });
-    }
-}
+import network from "@/utils/network";
 
-export default users
+const users = {
+  async getUsers(params) {
+    return network.get(`/api/v1/users/page`, { params });
+  },
+};
+
+export default users;
