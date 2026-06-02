@@ -16,6 +16,7 @@ import Dashboard from './components/page/dashboard/Dashboard';
 import Projects from './components/page/projects';
 import DetailProject from './components/page/projects/detail_project';
 import SnackbarProvider from './components/ui/snackbar';
+import detailProjectLoader from './components/page/projects/detail_project/DetailProject.loader';
 
 const theme = createTheme({
   typography: {
@@ -49,6 +50,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/projects/:id',
+        loader: detailProjectLoader,
         element: <DetailProject />,
       },
     ],
