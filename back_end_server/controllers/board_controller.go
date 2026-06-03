@@ -11,6 +11,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
+	"github.com/jinzhu/copier"
 )
 
 type BoardController struct {
@@ -102,6 +103,20 @@ func (c *BoardController) RemoveBoardMembers(ctx fiber.Ctx) error{
 	}
 	
 	return utils.Success(ctx,"Members removed successfully",nil)
+}
+
+func (c *BoardController) GetBoardMembers(ctx fiber.Ctx) error{
+	publicID := ctx.Params("id")
+	members, err := c.service.GetProjectMembers(publicID)
+	if err != nil {
+		return utils.NotFound(ctx,"Members not found",err.Error())
+	}
+	if len(members) == 0{
+		return utils.Success(ctx, "Project member still empty",members)
+	}
+	var userResp []models.UserResponse
+	_ = copier.Copy(&userResp,&members)
+	return utils.Success(ctx,"Members found",userResp)
 }
 
 func (c *BoardController) GetMyBoardPaginate(ctx fiber.Ctx) error {
