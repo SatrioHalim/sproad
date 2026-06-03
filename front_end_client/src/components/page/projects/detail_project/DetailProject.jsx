@@ -1,12 +1,12 @@
-import DetailProjectContainer from "./components/DetailProjectContainer";
-import DetailProjectProvider from "./DetailProjectContext";
+import DetailProjectContainer from './components/DetailProjectContainer';
+import DetailProjectProvider from './DetailProjectContext';
 
 const DetailProject = () => {
   return (
     <DetailProjectProvider>
-      <DetailProjectContainer></DetailProjectContainer>
+      <DetailProjectContainer />
     </DetailProjectProvider>
-  )
-}
+  );
+};
 
-export default DetailProject
+export default DetailProject;

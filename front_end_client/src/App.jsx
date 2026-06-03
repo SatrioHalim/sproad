@@ -15,8 +15,8 @@ import Register from './components/page/auth/register';
 import Dashboard from './components/page/dashboard/Dashboard';
 import Projects from './components/page/projects';
 import DetailProject from './components/page/projects/detail_project';
-import SnackbarProvider from './components/ui/snackbar';
 import detailProjectLoader from './components/page/projects/detail_project/DetailProject.loader';
+import SnackbarProvider from './components/ui/snackbar';
 
 const theme = createTheme({
   typography: {
