@@ -10,7 +10,6 @@ const boards = {
   async update(boardId, data) {
     return network.put(`/api/v1/boards/${boardId}`, data);
   },
-  // miss di be -> buat dulu
   async detail(boardId) {
     return network.get(`/api/v1/boards/${boardId}`);
   },
@@ -21,7 +20,6 @@ const boards = {
   async updateListPosition(boardId, data) {
     return network.put(`/api/v1/boards/${boardId}/positions`, data);
   },
-  // miss di be -> buat dulu
   async addMember(boardId, userIds) {
     return network.post(`/api/v1/boards/${boardId}/members`, userIds);
   },

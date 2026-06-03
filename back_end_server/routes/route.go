@@ -40,6 +40,7 @@ func Setup(app *fiber.App,
 	boardGroup.Post("/:id/members",bc.AddBoardMembers)
 	boardGroup.Delete("/:id/members",bc.RemoveBoardMembers)
 	boardGroup.Get("/my",bc.GetMyBoardPaginate)
+	boardGroup.Get("/:id",bc.GetBoardByID)
 	boardGroup.Get("/:board_id/lists",lc.GetListOnBoard)
 
 	// List routes

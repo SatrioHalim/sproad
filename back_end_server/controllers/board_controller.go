@@ -141,3 +141,13 @@ func (c *BoardController) GetMyBoardPaginate(ctx fiber.Ctx) error {
 	return utils.SuccessPagination(ctx, "Board Data fetch successfully", boards,meta)
 	
 }
+
+func (c *BoardController) GetBoardByID(ctx fiber.Ctx) error{
+	// id di param url, user yang ga punya akses ke board ga bisa dapet
+	publicID := ctx.Params("id")
+	boardDetail, err := c.service.GetByPublicID(publicID)
+	if err != nil {
+		return utils.NotFound(ctx,"Board not found",err.Error())
+	}
+	return utils.Success(ctx,"Board found",boardDetail)
+}
