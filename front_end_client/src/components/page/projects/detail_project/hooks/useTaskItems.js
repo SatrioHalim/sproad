@@ -1,34 +1,36 @@
-import { useSortable } from "@dnd-kit/sortable";
-import useDetailProjectContext from "./useDetailProjectContext";
-import { DRAG_CARD } from "@/utils/constants";
+import { useSortable } from '@dnd-kit/sortable';
 
-const useTaskItems = ({id,item,listId}) => {
-    const detailProjectContext = useDetailProjectContext();
+import useDetailProjectContext from './useDetailProjectContext';
 
-    const {
-        setNodeRef,
-        attributes,
-        listeners,
-        transform,
-        transition,
-        isDragging
-    } = useSortable({
-        id,
-        data:{
-            ...item,
-            type: DRAG_CARD
-        }
-    });
+import { DRAG_CARD } from '@/utils/constants';
 
-    return {
-        detailProjectContext,
-        isDragging,
-        attributes,
-        listeners,
-        setNodeRef,
-        transform,
-        transition
-    }
-}
+const useTaskItems = ({ id, item, listId }) => {
+  const detailProjectContext = useDetailProjectContext();
 
-export default useTaskItems
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id,
+    data: {
+      ...item,
+      type: DRAG_CARD,
+    },
+  });
+
+  return {
+    detailProjectContext,
+    isDragging,
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  };
+};
+
+export default useTaskItems;
