@@ -23,7 +23,6 @@ const boards = {
   async addMember(boardId, userIds) {
     return network.post(`/api/v1/boards/${boardId}/members`, userIds);
   },
-  // miss di be -> buat dulu
   async getMembers(boardId) {
     return network.get(`/api/v1/boards/${boardId}/members`);
   },
