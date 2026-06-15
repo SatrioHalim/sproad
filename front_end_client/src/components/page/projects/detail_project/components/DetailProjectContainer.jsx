@@ -4,9 +4,9 @@ import { useLoaderData } from 'react-router';
 import useDetailProjectContext from '../hooks/useDetailProjectContext';
 
 import CreateNewList from './CreateNewList';
+import ListSortableItem from './ListSortableItem';
 
 import SidebarLayout from '@/components/layouts/sidebarlayout';
-import ListSortableItem from './ListSortableItem';
 
 const DetailProjectContainer = () => {
   const detailProjectData = useLoaderData();
@@ -28,19 +28,17 @@ const DetailProjectContainer = () => {
     >
       <Stack
         direction={'row'}
-        sx={{ 
-          justifyContent:'flex-start',
-          alignItems:'flex-start',
-          gap:2,
-          pb:5,
-          overflowX:'auto'
-         }}
+        sx={{
+          justifyContent: 'flex-start',
+          alignItems: 'flex-start',
+          gap: 2,
+          pb: 5,
+          overflowX: 'auto',
+        }}
       >
-        {
-          Array.from({length:3}, (k,v) => (
-            <ListSortableItem></ListSortableItem>
-          ))
-        }
+        {Array.from({ length: 3 }, (k, v) => (
+          <ListSortableItem />
+        ))}
         <CreateNewList />
       </Stack>
     </SidebarLayout>
