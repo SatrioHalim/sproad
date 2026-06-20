@@ -1,10 +1,38 @@
-import { Delete } from '@mui/icons-material';
+import { Check, Close, Delete } from '@mui/icons-material';
 import { Box, colors, IconButton, Stack, Typography } from '@mui/material';
+import useListSortableItem from '../hooks/useListSortableItem';
 
-const ListSortableItem = () => {
+const ListSortableItem = ({id,item}) => {
+  const {
+    sortable,
+    droppable,
+    detailProjectContext,
+    handleDeleteList,
+    isShowConfirmDelete,
+    setShowConfirmDelete,
+    taskItems
+  } = useListSortableItem({id,item})
   const renderDeleteList = () => {
+    if(isShowConfirmDelete){
+      return(
+        <Stack direction={'row'} sx={{ gap:1 }}>
+          <IconButton
+          size='small'
+          color='success'
+          onClick={handleDeleteList(item.public_id)}>
+            <Check></Check>
+          </IconButton>
+          <IconButton
+          size='small'
+          color='default'
+          onClick={()=>{setShowConfirmDelete(false)}}>
+            <Close></Close>
+          </IconButton>
+        </Stack>
+      )
+    }
     return (
-      <IconButton size="small" color="error" onClick={() => {}}>
+      <IconButton size="small" color="error" onClick={() => {setShowConfirmDelete(true)}}>
         <Delete />
       </IconButton>
     );
@@ -21,6 +49,9 @@ const ListSortableItem = () => {
         mx: -0.5,
         background: colors.grey[50],
       }}
+      ref={sortable.setNodeRef}
+      {...sortable.attributes}
+      {...sortable.listeners}
     >
       <Stack
         direction={'row'}
@@ -47,7 +78,7 @@ const ListSortableItem = () => {
               fontWeight: 600,
             }}
           >
-            List Title
+            {item.title}
           </Typography>
           <Stack
             sx={{

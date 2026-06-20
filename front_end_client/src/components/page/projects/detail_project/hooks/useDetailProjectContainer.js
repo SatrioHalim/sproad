@@ -1,5 +1,4 @@
-import { MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { PointerSensor } from '@dnd-kit/react';
+import { MouseSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { useMemo, useState } from 'react';
 import { useLoaderData } from 'react-router';
 
@@ -12,7 +11,7 @@ const useDetailProjectContainer = () => {
   const detailProjectContext = useDetailProjectContext();
 
   const [activeDragItem, setActiveDragItem] = useState(null);
-  const boardListData = detailProjectContext.boardListData;
+  const boardListData = detailProjectContext?.boardListData ?? [];
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -59,7 +58,9 @@ const useDetailProjectContainer = () => {
   };
 
   const boardListDataMapPublicIds = useMemo(() => {
-    return boardListData.map((item) => item.public_id);
+    return Array.isArray(boardListData)
+      ? boardListData.map((item) => item.public_id)
+      : [];
   }, [boardListData]);
 
   return {
