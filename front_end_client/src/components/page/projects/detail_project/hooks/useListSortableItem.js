@@ -46,19 +46,19 @@ const useListSortableItem = ({ id, item }) => {
     handleDeleteList,
     isShowConfirmDelete,
     setShowConfirmDelete,
-    droppable:{
-        isOver,
-    active,
-    over,
-    setNodeRefDroppable,
+    droppable: {
+      isOver,
+      active,
+      over,
+      setNodeRefDroppable,
     },
-    sortable:{
+    sortable: {
       setNodeRef,
       attributes,
       listeners,
       transition,
-      transform
-    }
+      transform,
+    },
   };
 };
 

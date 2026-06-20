@@ -1,8 +1,9 @@
 import { Check, Close, Delete } from '@mui/icons-material';
 import { Box, colors, IconButton, Stack, Typography } from '@mui/material';
+
 import useListSortableItem from '../hooks/useListSortableItem';
 
-const ListSortableItem = ({id,item}) => {
+const ListSortableItem = ({ id, item }) => {
   const {
     sortable,
     droppable,
@@ -10,29 +11,39 @@ const ListSortableItem = ({id,item}) => {
     handleDeleteList,
     isShowConfirmDelete,
     setShowConfirmDelete,
-    taskItems
-  } = useListSortableItem({id,item})
+    taskItems,
+  } = useListSortableItem({ id, item });
   const renderDeleteList = () => {
-    if(isShowConfirmDelete){
-      return(
-        <Stack direction={'row'} sx={{ gap:1 }}>
+    if (isShowConfirmDelete) {
+      return (
+        <Stack direction={'row'} sx={{ gap: 1 }}>
           <IconButton
-          size='small'
-          color='success'
-          onClick={handleDeleteList(item.public_id)}>
-            <Check></Check>
+            size="small"
+            color="success"
+            onClick={handleDeleteList(item.public_id)}
+          >
+            <Check />
           </IconButton>
           <IconButton
-          size='small'
-          color='default'
-          onClick={()=>{setShowConfirmDelete(false)}}>
-            <Close></Close>
+            size="small"
+            color="default"
+            onClick={() => {
+              setShowConfirmDelete(false);
+            }}
+          >
+            <Close />
           </IconButton>
         </Stack>
-      )
+      );
     }
     return (
-      <IconButton size="small" color="error" onClick={() => {setShowConfirmDelete(true)}}>
+      <IconButton
+        size="small"
+        color="error"
+        onClick={() => {
+          setShowConfirmDelete(true);
+        }}
+      >
         <Delete />
       </IconButton>
     );

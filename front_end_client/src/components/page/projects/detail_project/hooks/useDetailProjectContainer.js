@@ -1,4 +1,9 @@
-import { MouseSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import {
+  MouseSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
 import { useMemo, useState } from 'react';
 import { useLoaderData } from 'react-router';
 
