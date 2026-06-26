@@ -4,7 +4,7 @@ import useDetailProjectContext from './useDetailProjectContext';
 
 import { DRAG_CARD } from '@/utils/constants';
 
-const useTaskItems = ({ id, item, listId }) => {
+const useTaskSortableItem = ({ id, item, listId }) => {
   const detailProjectContext = useDetailProjectContext();
 
   const {
@@ -33,4 +33,4 @@ const useTaskItems = ({ id, item, listId }) => {
   };
 };
 
-export default useTaskItems;
+export default useTaskSortableItem;
