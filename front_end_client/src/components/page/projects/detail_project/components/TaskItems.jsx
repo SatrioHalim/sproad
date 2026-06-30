@@ -6,10 +6,10 @@ import { Box, colors, Paper, Stack, Typography } from '@mui/material';
 
 import useTaskItems from '../hooks/useTaskItems';
 
+import CreateNewTask from './CreateNewtask';
 import TaskSortableItem from './TaskSortableItem';
 
 import { DRAG_CARD } from '@/utils/constants';
-import CreateNewTask from './CreateNewtask';
 
 const TaskItems = ({ listDroppable, listItem }) => {
   const { active } = listDroppable;
@@ -88,7 +88,7 @@ const TaskItems = ({ listDroppable, listItem }) => {
             />
           ))}
         </SortableContext>
-        <CreateNewTask listId={listItem.public_id}></CreateNewTask>
+        <CreateNewTask listId={listItem.public_id} />
       </Stack>
     </Box>
   );
