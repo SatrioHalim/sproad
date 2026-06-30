@@ -2,6 +2,7 @@ import { Check, Close, Delete } from '@mui/icons-material';
 import { Box, colors, IconButton, Stack, Typography } from '@mui/material';
 
 import useListSortableItem from '../hooks/useListSortableItem';
+import TaskItems from './TaskItems';
 
 const ListSortableItem = ({ id, item }) => {
   const {
@@ -107,12 +108,13 @@ const ListSortableItem = ({ id, item }) => {
                 fontWeight: 600,
               }}
             >
-              10
+              {taskItems.length}
             </Typography>
           </Stack>
         </Stack>
         {renderDeleteList()}
       </Stack>
+      <TaskItems listDroppable={droppable} listItem={item}></TaskItems>
     </Box>
   );
 };
