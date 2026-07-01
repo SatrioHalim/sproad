@@ -21,7 +21,7 @@ const CreateNewTask = ({ listId }) => {
       <Box sx={{ p: 1 }} component={'form'} onSubmit={handleSubmit(onSubmit)}>
         <TextField
           control={control}
-          name={'Title'}
+          name={'title'}
           label={'Task name'}
           fullWidth
           autoFocus
@@ -57,7 +57,7 @@ const CreateNewTask = ({ listId }) => {
   }
 
   return (
-    <Button type="button" variant="text" fullWidth startIcon={<AddCircle />}>
+    <Button type="button" variant="text" fullWidth startIcon={<AddCircle />} onClick={handleOpenFormCreateNewTask}>
       Create New Task
     </Button>
   );
