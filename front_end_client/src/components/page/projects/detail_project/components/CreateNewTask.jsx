@@ -57,7 +57,13 @@ const CreateNewTask = ({ listId }) => {
   }
 
   return (
-    <Button type="button" variant="text" fullWidth startIcon={<AddCircle />} onClick={handleOpenFormCreateNewTask}>
+    <Button
+      type="button"
+      variant="text"
+      fullWidth
+      startIcon={<AddCircle />}
+      onClick={handleOpenFormCreateNewTask}
+    >
       Create New Task
     </Button>
   );

@@ -16,10 +16,10 @@ import useDetailProjectContext from '../hooks/useDetailProjectContext';
 
 import CreateNewList from './CreateNewList';
 import ListSortableItem from './ListSortableItem';
+import TaskSortableItem from './TaskSortableItem';
 
 import SidebarLayout from '@/components/layouts/sidebarlayout';
 import { DRAG_CARD, DRAG_LIST } from '@/utils/constants';
-import TaskSortableItem from './TaskSortableItem';
 
 const DetailProjectContainer = () => {
   const {
@@ -42,7 +42,11 @@ const DetailProjectContainer = () => {
     }
     if (activeDragItem && activeDragItem.type == DRAG_CARD) {
       return (
-        <TaskSortableItem listId={activeDragItem.list_public_id} id={activeDragItem.public_id} item={activeDragItem} />
+        <TaskSortableItem
+          listId={activeDragItem.list_public_id}
+          id={activeDragItem.public_id}
+          item={activeDragItem}
+        />
       );
     }
     return <></>;
