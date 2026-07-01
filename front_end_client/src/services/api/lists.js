@@ -16,6 +16,9 @@ const lists = {
       positions: data,
     });
   },
+  async updateCardPositions(listId, data) {
+    return lists.updateCardPosition(listId, data);
+  },
 };
 
 export default lists;

@@ -101,3 +101,32 @@ func (c *ListController) DeleteList(ctx fiber.Ctx) error {
 
 	return utils.Success(ctx, "List deleted successfully", publicID)
 }
+
+func (c *ListController) UpdateCardPosition(ctx fiber.Ctx) error {
+	listPublicID := ctx.Params("id")
+	if _, err := uuid.Parse(listPublicID); err != nil {
+		return utils.BadRequest(ctx, "Invalid ID", err.Error())
+	}
+
+	var req struct {
+		Positions []string `json:"positions"`
+	}
+	if err := ctx.Bind().Body(&req); err != nil {
+		return utils.BadRequest(ctx, "Failed to parse positions", err.Error())
+	}
+
+	parsedPositions := make([]uuid.UUID, 0, len(req.Positions))
+	for _, position := range req.Positions {
+		parsed, err := uuid.Parse(position)
+		if err != nil {
+			return utils.BadRequest(ctx, "Invalid card position", err.Error())
+		}
+		parsedPositions = append(parsedPositions, parsed)
+	}
+
+	if err := c.cardService.UpdatePosition(listPublicID, parsedPositions); err != nil {
+		return utils.BadRequest(ctx, "Failed to update card order", err.Error())
+	}
+
+	return utils.Success(ctx, "Card order updated successfully", req.Positions)
+}

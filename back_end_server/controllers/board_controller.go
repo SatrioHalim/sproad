@@ -15,11 +15,12 @@ import (
 )
 
 type BoardController struct {
-	service services.BoardService
+	service     services.BoardService
+	listService services.ListService
 }
 
-func NewBoardController(s services.BoardService) *BoardController{
-	return &BoardController{service: s}
+func NewBoardController(s services.BoardService, ls services.ListService) *BoardController{
+	return &BoardController{service: s, listService: ls}
 }
 
 func (c *BoardController) CreateBoard(ctx fiber.Ctx) error{
@@ -74,6 +75,33 @@ func (c *BoardController) UpdateBoard(ctx fiber.Ctx) error{
 		return utils.BadRequest(ctx,"Failed to update board",err.Error())
 	}
 	return utils.Success(ctx,"Board updated successfully",board)
+}
+
+func (c *BoardController) UpdateListPosition(ctx fiber.Ctx) error {
+	boardPublicID := ctx.Params("id")
+	if _, err := uuid.Parse(boardPublicID); err != nil {
+		return utils.BadRequest(ctx, "Invalid ID", err.Error())
+	}
+
+	var positions []string
+	if err := ctx.Bind().Body(&positions); err != nil {
+		return utils.BadRequest(ctx, "Failed to parse positions", err.Error())
+	}
+
+	parsedPositions := make([]uuid.UUID, 0, len(positions))
+	for _, position := range positions {
+		parsed, err := uuid.Parse(position)
+		if err != nil {
+			return utils.BadRequest(ctx, "Invalid list position", err.Error())
+		}
+		parsedPositions = append(parsedPositions, parsed)
+	}
+
+	if err := c.listService.UpdatePosition(boardPublicID, parsedPositions); err != nil {
+		return utils.BadRequest(ctx, "Failed to update list order", err.Error())
+	}
+
+	return utils.Success(ctx, "List order updated successfully", positions)
 }
 
 func (c *BoardController) AddBoardMembers(ctx fiber.Ctx) error{

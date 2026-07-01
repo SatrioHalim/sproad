@@ -6,6 +6,7 @@ import (
 
 	"github.com/SatrioHalim/Go-x-React-Journey/config"
 	"github.com/SatrioHalim/Go-x-React-Journey/models"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -18,7 +19,7 @@ type CardRepository interface {
 	FindByListID(listID string) ([]models.Card, error)
 
 	FindCardPositionByListID(id int64) (*models.CardPosition, error)
-	UpdatePosition(listID string, position []string) error
+	UpdatePosition(listID int64, position []uuid.UUID) error
 }
 
 type cardRepository struct {
@@ -78,6 +79,6 @@ func (r *cardRepository) FindCardPositionByListID(id int64) (*models.CardPositio
 	return &position, nil
 }
 
-func (r *cardRepository) UpdatePosition(listID string, position []string) error {
+func (r *cardRepository) UpdatePosition(listID int64, position []uuid.UUID) error {
 	return config.DB.Model(&models.CardPosition{}).Where("list_internal_id = ?", listID).Update("card_order", position).Error
 }

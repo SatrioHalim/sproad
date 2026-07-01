@@ -21,6 +21,7 @@ type CardService interface {
 	GetByListID(listPublicID string) ([]models.Card, error)
 	GetByID(id uint) (*models.Card, error)
 	GetByPublicID(publicID string) (*models.Card, error)
+	UpdatePosition(listPublicID string, positions []uuid.UUID) error
 }
 
 type cardService struct {
@@ -128,7 +129,7 @@ func (s *cardService) Update(card *models.Card, listPublicID string) error {
 	if exsistingCard.ListID != newList.InternalID {
 		// hapus dari posisi list lama
 		var oldPos models.CardPosition
-		if err := tx.Where("list_internal_id = ?",exsistingCard.ListID).First(&oldPos).Error; err != nil {
+		if err := tx.Where("list_internal_id = ?",exsistingCard.ListID).First(&oldPos).Error; err == nil {
 			filtered := make(types.UUIDArray,0,len(oldPos.CardOrder))
 			for _, id := range oldPos.CardOrder {
 				if id != exsistingCard.PublicID {
@@ -173,7 +174,11 @@ func (s *cardService) Update(card *models.Card, listPublicID string) error {
 	// update card
 	card.InternalID = exsistingCard.InternalID
 	card.PublicID = exsistingCard.PublicID
-	card.ListID = exsistingCard.ListID
+	if exsistingCard.ListID != newList.InternalID {
+		card.ListID = newList.InternalID
+	} else {
+		card.ListID = exsistingCard.ListID
+	}
 
 	if err := tx.Save(card).Error; err != nil {
 		tx.Rollback()
@@ -186,6 +191,15 @@ func (s *cardService) Update(card *models.Card, listPublicID string) error {
 	}
 	
 	return nil
+}
+
+func (s *cardService) UpdatePosition(listPublicID string, positions []uuid.UUID) error {
+	list, err := s.listRepo.FindByPublicID(listPublicID)
+	if err != nil {
+		return fmt.Errorf("List not found: %w", err)
+	}
+
+	return s.cardRepo.UpdatePosition(list.InternalID, positions)
 }
 
 func (s *cardService) Delete(id uint) error {

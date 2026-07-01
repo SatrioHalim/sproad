@@ -40,6 +40,7 @@ func Setup(app *fiber.App,
 	boardGroup.Post("/:id/members",bc.AddBoardMembers)
 	boardGroup.Get("/:id/members",bc.GetBoardMembers)
 	boardGroup.Delete("/:id/members",bc.RemoveBoardMembers)
+	boardGroup.Put("/:id/positions",bc.UpdateListPosition)
 	boardGroup.Get("/my",bc.GetMyBoardPaginate)
 	boardGroup.Get("/:id",bc.GetBoardByID)
 	boardGroup.Get("/:board_id/lists",lc.GetListOnBoard)
@@ -49,6 +50,7 @@ func Setup(app *fiber.App,
 	listGroup.Post("/", lc.CreateList)
 	listGroup.Get("/:id/cards", lc.GetCardsOnList)
 	listGroup.Put("/:id", lc.UpdateList)
+	listGroup.Put("/:id/positions", lc.UpdateCardPosition)
 	listGroup.Delete("/:id", lc.DeleteList)
 
 	// Card routes

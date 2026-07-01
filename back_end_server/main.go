@@ -39,7 +39,6 @@ func main() {
 	boardRepo := repositories.NewBoardRepository()
 	boardMemberRepo := repositories.NewBoardMemberRepository()
 	boardService := services.NewBoardService(boardRepo,userRepo,boardMemberRepo)
-	boardController := controllers.NewBoardController(boardService)
 
 	// List handling
 	listPositionRepo := repositories.NewListPositionRepository()
@@ -49,6 +48,7 @@ func main() {
 	// Card handling
 	cardRepo := repositories.NewCardRepository()
 	cardService := services.NewCardService(cardRepo, listRepo, userRepo)
+	boardController := controllers.NewBoardController(boardService, listService)
 	listController := controllers.NewListController(listService, cardService)
 	cardController := controllers.NewCardController(cardService)
 
