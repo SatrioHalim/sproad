@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/SatrioHalim/Go-x-React-Journey/models"
+	"github.com/SatrioHalim/Go-x-React-Journey/models/types"
 	"github.com/SatrioHalim/Go-x-React-Journey/services"
 	"github.com/SatrioHalim/Go-x-React-Journey/utils"
 	"github.com/gofiber/fiber/v3"
@@ -124,7 +125,7 @@ func (c *ListController) UpdateCardPosition(ctx fiber.Ctx) error {
 		parsedPositions = append(parsedPositions, parsed)
 	}
 
-	if err := c.cardService.UpdatePosition(listPublicID, parsedPositions); err != nil {
+	if err := c.cardService.UpdatePosition(listPublicID, types.UUIDArray(parsedPositions)); err != nil {
 		return utils.BadRequest(ctx, "Failed to update card order", err.Error())
 	}
 

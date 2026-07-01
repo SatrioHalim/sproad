@@ -21,7 +21,7 @@ type CardService interface {
 	GetByListID(listPublicID string) ([]models.Card, error)
 	GetByID(id uint) (*models.Card, error)
 	GetByPublicID(publicID string) (*models.Card, error)
-	UpdatePosition(listPublicID string, positions []uuid.UUID) error
+	UpdatePosition(listPublicID string, positions types.UUIDArray) error
 }
 
 type cardService struct {
@@ -193,7 +193,7 @@ func (s *cardService) Update(card *models.Card, listPublicID string) error {
 	return nil
 }
 
-func (s *cardService) UpdatePosition(listPublicID string, positions []uuid.UUID) error {
+func (s *cardService) UpdatePosition(listPublicID string, positions types.UUIDArray) error {
 	list, err := s.listRepo.FindByPublicID(listPublicID)
 	if err != nil {
 		return fmt.Errorf("List not found: %w", err)

@@ -159,20 +159,30 @@ const DetailProjectProvider = ({ children }) => {
           const { isSameList, active, over } = updateTaskItemPosition;
           if (isSameList) {
             // Move in the same list
+            const currentListCards = boardListWithCardsData.filter(
+              (item) => item.list_public_id === active.list_public_id,
+            );
 
-            const oldIndex = [...boardListWithCardsData].findIndex(
+            const oldIndex = currentListCards.findIndex(
               (item) => item.public_id === active.public_id,
             );
-            const newIndex = [...boardListWithCardsData].findIndex(
+            const newIndex = currentListCards.findIndex(
               (item) => item.public_id === over.public_id,
             );
-            const updatedCards = arrayMove(
-              boardListWithCardsData,
+            const updatedCurrentListCards = arrayMove(
+              currentListCards,
               oldIndex,
               newIndex,
             );
+            const updatedCards = boardListWithCardsData.map((item) => {
+              const updatedCard = updatedCurrentListCards.find(
+                (card) => card.public_id === item.public_id,
+              );
 
-            const cardIds = updatedCards.map((item) => item.public_id);
+              return updatedCard ?? item;
+            });
+
+            const cardIds = updatedCurrentListCards.map((item) => item.public_id);
             await services.lists.updateCardPosition(
               active.list_public_id,
               cardIds,
