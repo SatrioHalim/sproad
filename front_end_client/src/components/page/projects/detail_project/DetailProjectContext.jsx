@@ -182,7 +182,9 @@ const DetailProjectProvider = ({ children }) => {
               return updatedCard ?? item;
             });
 
-            const cardIds = updatedCurrentListCards.map((item) => item.public_id);
+            const cardIds = updatedCurrentListCards.map(
+              (item) => item.public_id,
+            );
             await services.lists.updateCardPosition(
               active.list_public_id,
               cardIds,
