@@ -15,6 +15,8 @@ const ModalTaskDetail = () => {
     formTask,
     onSubmit,
     isLoading,
+    editDescription,
+    setEditDescription,
   } = useModalTaskDetail();
 
   const renderTitle = () => {
@@ -79,6 +81,70 @@ const ModalTaskDetail = () => {
       </Stack>
     );
   };
+  const renderDescription = () => {
+    return (
+      <Stack sx={{ gap: 2 }}>
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: 700,
+          }}
+        >
+          Task Description
+        </Typography>
+        {editDescription ? (
+          <Box component={'form'} onSubmit={formTask.handleSubmit(onSubmit)}>
+            <TextField
+              control={formTask.control}
+              name={'description'}
+              multiline
+              rows={10}
+              fullWidth
+              disabled={isLoading}
+            />
+            <Stack
+              direction={'row'}
+              sx={{ justifyContent: 'flex-end', gap: 1 }}
+            >
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={isLoading}
+                loading={isLoading}
+              >
+                Save
+              </Button>
+              <Button
+                type="button"
+                variant="outlined"
+                onClick={() => setEditDescription(false)}
+                disabled={isLoading}
+              >
+                Cancel
+              </Button>
+            </Stack>
+          </Box>
+        ) : (
+          <Typography
+            component={'a'}
+            variant="body2"
+            sx={{
+              display: 'block',
+              ':hover': {
+                background: colors.grey[100],
+                cursor: 'pointer',
+                p: 1,
+                borderRadius: 1,
+              },
+            }}
+            onClick={() => setEditDescription(true)}
+          >
+            {taskDetailData.description || 'No description yet, click to edit'}
+          </Typography>
+        )}
+      </Stack>
+    );
+  };
 
   return (
     <Modal
@@ -105,6 +171,7 @@ const ModalTaskDetail = () => {
           }}
         >
           {renderTitle()}
+          {renderDescription()}
         </Stack>
       </Stack>
     </Modal>
