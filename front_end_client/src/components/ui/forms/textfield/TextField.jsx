@@ -7,7 +7,7 @@ import {
   InputLabel,
   OutlinedInput,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 const TextField = ({
@@ -20,13 +20,10 @@ const TextField = ({
   secureText = false,
   multiline = false,
   rows,
+  children,
   ...props
 }) => {
-  const [showPassword, setShowPassword] = useState(false);
-
-  useEffect(() => {
-    setShowPassword(secureText);
-  }, [secureText]);
+  const [showPassword, setShowPassword] = useState(() => secureText);
   return (
     <Controller
       name={name}
@@ -77,6 +74,7 @@ const TextField = ({
             <FormHelperText error={Boolean(error)}>
               {error?.message ? error?.message : helperText}
             </FormHelperText>
+            {children}
           </FormControl>
         );
       }}

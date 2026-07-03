@@ -1,21 +1,15 @@
-import {
-  defaultDropAnimation,
-  defaultDropAnimationSideEffects,
-  DndContext,
-  DragOverlay,
-} from '@dnd-kit/core';
+import { defaultDropAnimationSideEffects, DndContext, DragOverlay } from '@dnd-kit/core';
 import {
   horizontalListSortingStrategy,
   SortableContext,
 } from '@dnd-kit/sortable';
 import { Stack } from '@mui/material';
-import { useLoaderData } from 'react-router';
 
 import useDetailProjectContainer from '../hooks/useDetailProjectContainer';
-import useDetailProjectContext from '../hooks/useDetailProjectContext';
 
 import CreateNewList from './CreateNewList';
 import ListSortableItem from './ListSortableItem';
+import ProjectInfo from './ProjectInfo';
 import TaskSortableItem from './TaskSortableItem';
 
 import SidebarLayout from '@/components/layouts/sidebarlayout';
@@ -49,7 +43,7 @@ const DetailProjectContainer = () => {
         />
       );
     }
-    return <></>;
+    return null;
   };
 
   return (
@@ -72,6 +66,7 @@ const DetailProjectContainer = () => {
         onDragCancel={handleDragCancel}
         sensors={sensors}
       >
+        <ProjectInfo />
         <SortableContext
           items={boardListDataMapPublicIds}
           strategy={horizontalListSortingStrategy}

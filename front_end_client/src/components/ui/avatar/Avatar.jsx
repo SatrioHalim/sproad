@@ -19,7 +19,7 @@ function stringToColor(string) {
   return color;
 }
 
-function stringAvatar(name) {
+function stringAvatar(name = '') {
   const initialName = name
     .split(' ')
     .map((n) => n[0])
@@ -41,6 +41,7 @@ function stringAvatar(name) {
 
 const Avatar = ({ text, onClick }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
   const handlePopoverOpen = (e) => {
     setAnchorEl(e.currentTarget);

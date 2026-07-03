@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useLoaderData } from 'react-router';
 import { useDebounce } from 'use-debounce';
@@ -29,30 +29,52 @@ const useModalAddnewMember = () => {
   const [debounceEmail] = useDebounce(watchEmail, 1000);
 
   const snackbar = useSnackbar();
-  const fetchUserByEmail = useCallback(
-    async (email) => {
-      if (!email) return;
+  const snackbarRef = useRef(snackbar);
+
+  useEffect(() => {
+    snackbarRef.current = snackbar;
+  }, [snackbar]);
+
+  useEffect(() => {
+    let isActive = true;
+
+    const fetchUserByEmail = async (email) => {
+      if (!email) {
+        if (isActive) {
+          setUsersData(null);
+        }
+        return;
+      }
+
       try {
-        setLoading(true);
+        if (isActive) {
+          setLoading(true);
+        }
         const response = await services.users.getUsers({
           filter: email,
           limit: 1,
           page: 1,
         });
-        setUsersData(response.data.data);
-      } catch (error) {
-        console.error(error);
-        snackbar.toggleSnackbar(true, 'Failed to fetch users');
-        setUsersData(null);
+        if (isActive) {
+          setUsersData(response.data.data);
+        }
+      } catch {
+        if (isActive) {
+          snackbarRef.current.toggleSnackbar(true, 'Failed to fetch users');
+          setUsersData(null);
+        }
       } finally {
-        setLoading(false);
+        if (isActive) {
+          setLoading(false);
+        }
       }
-    },
-    [debounceEmail],
-  );
+    };
 
-  useEffect(() => {
     fetchUserByEmail(debounceEmail);
+
+    return () => {
+      isActive = false;
+    };
   }, [debounceEmail]);
 
   const handleClose = async () => {
@@ -68,11 +90,12 @@ const useModalAddnewMember = () => {
       const userIds = usersData.map((item) => item.public_id);
       await services.boards.addMember(detailProjectData.public_id, userIds);
       snackbar.toggleSnackbar(true, 'Member added successfully');
-    } catch (error) {
-      console.error(error);
+    } catch {
       snackbar.toggleSnackbar(true, 'Failed to add member');
     } finally {
-      setLoadingAddMember(false);
+        detailProjectContext.setIsOpenModalAddNewMember(false);
+        setLoadingAddMember(false);
+        await detailProjectContext.fetchBoardMembers();
     }
   };
 
