@@ -93,9 +93,9 @@ const useModalAddnewMember = () => {
     } catch {
       snackbar.toggleSnackbar(true, 'Failed to add member');
     } finally {
-        detailProjectContext.setIsOpenModalAddNewMember(false);
-        setLoadingAddMember(false);
-        await detailProjectContext.fetchBoardMembers();
+      detailProjectContext.setIsOpenModalAddNewMember(false);
+      setLoadingAddMember(false);
+      await detailProjectContext.fetchBoardMembers();
     }
   };
 

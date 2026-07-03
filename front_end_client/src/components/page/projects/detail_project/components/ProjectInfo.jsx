@@ -1,18 +1,20 @@
-import { Stack } from "@mui/material"
-import ProjectMembers from "./ProjectMembers"
+import { Stack } from '@mui/material';
+
+import ProjectMembers from './ProjectMembers';
 
 const ProjectInfo = () => {
-    return (
-        <Stack
-        sx={{ 
-            justifyContent:'space-between',
-            alignItems:'center',
-            mb: 2
-         }}
-         direction={'row'}>
-            <ProjectMembers></ProjectMembers>
-        </Stack>
-    )
-}
+  return (
+    <Stack
+      sx={{
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        mb: 2,
+      }}
+      direction={'row'}
+    >
+      <ProjectMembers />
+    </Stack>
+  );
+};
 
-export default ProjectInfo
+export default ProjectInfo;

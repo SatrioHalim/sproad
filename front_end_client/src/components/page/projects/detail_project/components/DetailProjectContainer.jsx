@@ -1,4 +1,8 @@
-import { defaultDropAnimationSideEffects, DndContext, DragOverlay } from '@dnd-kit/core';
+import {
+  defaultDropAnimationSideEffects,
+  DndContext,
+  DragOverlay,
+} from '@dnd-kit/core';
 import {
   horizontalListSortingStrategy,
   SortableContext,
