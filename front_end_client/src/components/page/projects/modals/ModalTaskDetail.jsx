@@ -1,9 +1,12 @@
 import { Box, Button, colors, Stack, Typography } from '@mui/material';
+import dayjs from 'dayjs';
 
 import useModalTaskDetail from './hooks/useModalTaskDetail';
 
+import DatePicker from '@/components/ui/forms/datepicker';
 import TextField from '@/components/ui/forms/textfield';
 import Modal from '@/components/ui/modal';
+import datetime from '@/utils/datetime';
 
 const ModalTaskDetail = () => {
   const {
@@ -17,7 +20,19 @@ const ModalTaskDetail = () => {
     isLoading,
     editDescription,
     setEditDescription,
+    editDueDate,
+    setEditDueDate,
+    detailProjectData,
   } = useModalTaskDetail();
+
+  const projectDueDate = detailProjectData?.due_date
+    ? dayjs(detailProjectData.due_date)
+    : null;
+  const isProjectDueDateValid = projectDueDate?.isValid?.() ?? false;
+  const maxDate =
+    isProjectDueDateValid && projectDueDate.isAfter(dayjs())
+      ? projectDueDate
+      : undefined;
 
   const renderTitle = () => {
     return (
@@ -90,7 +105,7 @@ const ModalTaskDetail = () => {
             fontWeight: 700,
           }}
         >
-          Task Description
+          Description
         </Typography>
         {editDescription ? (
           <Box component={'form'} onSubmit={formTask.handleSubmit(onSubmit)}>
@@ -145,6 +160,73 @@ const ModalTaskDetail = () => {
       </Stack>
     );
   };
+  const renderDueDate = () => {
+    return (
+      <Stack sx={{ gap: 2 }}>
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: 700,
+          }}
+        >
+          Deadline
+        </Typography>
+        {editDueDate ? (
+          <Box component={'form'} onSubmit={formTask.handleSubmit(onSubmit)}>
+            <DatePicker
+              control={formTask.control}
+              name={'due_date'}
+              fullWidth
+              disabled={isLoading}
+              minDate={dayjs().startOf('day')}
+              maxDate={maxDate}
+            />
+            <Stack
+              direction={'row'}
+              sx={{ justifyContent: 'flex-end', gap: 1 }}
+            >
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={isLoading}
+                loading={isLoading}
+              >
+                Save
+              </Button>
+              <Button
+                type="button"
+                variant="outlined"
+                onClick={() => setEditDueDate(false)}
+                disabled={isLoading}
+              >
+                Cancel
+              </Button>
+            </Stack>
+          </Box>
+        ) : (
+          <Typography
+            component={'a'}
+            variant="body2"
+            sx={{
+              display: 'block',
+              ':hover': {
+                background: colors.grey[100],
+                cursor: 'pointer',
+                p: 1,
+                borderRadius: 1,
+              },
+            }}
+            onClick={() => setEditDueDate(true)}
+          >
+            {taskDetailData.due_date &&
+            taskDetailData.due_date == '0001-01-01T00:00:00Z'
+              ? 'Deadline not added yet, click to add'
+              : datetime.format(taskDetailData.due_date, 'DD MMMM YYYY')}
+          </Typography>
+        )}
+      </Stack>
+    );
+  };
 
   return (
     <Modal
@@ -172,6 +254,14 @@ const ModalTaskDetail = () => {
         >
           {renderTitle()}
           {renderDescription()}
+        </Stack>
+        <Stack
+          sx={{
+            width: '35%',
+            gap: 2,
+          }}
+        >
+          {renderDueDate()}
         </Stack>
       </Stack>
     </Modal>

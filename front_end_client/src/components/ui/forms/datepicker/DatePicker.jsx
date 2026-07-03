@@ -25,7 +25,7 @@ const DatePicker = ({
             <BaseDatePicker
               {...props}
               label={label}
-              value={value}
+              value={value ?? null}
               onChange={onChange}
               slotProps={{
                 textField: {

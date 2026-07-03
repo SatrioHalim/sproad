@@ -6,6 +6,7 @@ import { useLoaderData, useSearchParams } from 'react-router';
 import useDetailProjectContext from '../../detail_project/hooks/useDetailProjectContext';
 
 import services from '@/services';
+import datetime from '@/utils/datetime';
 
 const useModalTaskDetail = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -23,12 +24,32 @@ const useModalTaskDetail = () => {
   const taskId = searchParams.get('taskId');
   const listId = searchParams.get('listId');
 
-  const formTask = useForm();
+  const formTask = useForm({
+    defaultValues: {
+      title: '',
+      description: '',
+      due_date: null,
+    },
+  });
 
   const fetchTaskDetail = async (taskId) => {
     const response = await services.cards.getDetail(taskId);
     setTaskDetailData(response.data.data);
   };
+
+  useEffect(() => {
+    if (!taskDetailData?.public_id) return;
+
+    formTask.reset({
+      title: taskDetailData.title || '',
+      description: taskDetailData.description || '',
+      due_date:
+        taskDetailData.due_date &&
+        taskDetailData.due_date !== '0001-01-01T00:00:00Z'
+          ? dayjs(taskDetailData.due_date)
+          : null,
+    });
+  }, [taskDetailData, formTask]);
 
   const onSubmit = async (values) => {
     setIsLoading(true);
@@ -36,7 +57,9 @@ const useModalTaskDetail = () => {
       list_id: listId,
       title: values.title ?? taskDetailData.title,
       description: values.description ?? taskDetailData.description,
-      due_date: values.due_date ?? taskDetailData.due_date,
+      due_date: values.due_date
+        ? datetime.getIsoString(values.due_date)
+        : taskDetailData.due_date,
       position: taskDetailData.position,
     });
     await fetchTaskDetail(taskId);
@@ -61,7 +84,20 @@ const useModalTaskDetail = () => {
 
   useEffect(() => {
     if (taskId && listId) {
-      fetchTaskDetail(taskId);
+      let isActive = true;
+
+      const loadTaskDetail = async () => {
+        const response = await services.cards.getDetail(taskId);
+        if (isActive) {
+          setTaskDetailData(response.data.data);
+        }
+      };
+
+      loadTaskDetail();
+
+      return () => {
+        isActive = false;
+      };
     }
   }, [taskId, listId]);
 
