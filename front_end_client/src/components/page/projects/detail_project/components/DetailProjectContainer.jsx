@@ -9,6 +9,7 @@ import {
 } from '@dnd-kit/sortable';
 import { Stack } from '@mui/material';
 
+import ModalTaskDetail from '../../modals/ModalTaskDetail';
 import useDetailProjectContainer from '../hooks/useDetailProjectContainer';
 
 import CreateNewList from './CreateNewList';
@@ -51,65 +52,68 @@ const DetailProjectContainer = () => {
   };
 
   return (
-    <SidebarLayout
-      pageTitle={`${detailProjectData.title} (${detailProjectContext.getProjectInitials})`}
-      breadcrumbs={[
-        {
-          label: 'Project List',
-          href: '/projects',
-        },
-        {
-          label: detailProjectData.title,
-          href: `/projects/${detailProjectData.public_id}`,
-        },
-      ]}
-    >
-      <DndContext
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-        onDragCancel={handleDragCancel}
-        sensors={sensors}
+    <>
+      <SidebarLayout
+        pageTitle={`${detailProjectData.title} (${detailProjectContext.getProjectInitials})`}
+        breadcrumbs={[
+          {
+            label: 'Project List',
+            href: '/projects',
+          },
+          {
+            label: detailProjectData.title,
+            href: `/projects/${detailProjectData.public_id}`,
+          },
+        ]}
       >
-        <ProjectInfo />
-        <SortableContext
-          items={boardListDataMapPublicIds}
-          strategy={horizontalListSortingStrategy}
+        <DndContext
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          onDragCancel={handleDragCancel}
+          sensors={sensors}
         >
-          <Stack
-            direction={'row'}
-            sx={{
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              gap: 2,
-              pb: 5,
-              overflowX: 'auto',
+          <ProjectInfo />
+          <SortableContext
+            items={boardListDataMapPublicIds}
+            strategy={horizontalListSortingStrategy}
+          >
+            <Stack
+              direction={'row'}
+              sx={{
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+                gap: 2,
+                pb: 5,
+                overflowX: 'auto',
+              }}
+            >
+              {boardListData?.map((item) => (
+                <ListSortableItem
+                  key={item.public_id}
+                  id={item.public_id}
+                  item={item}
+                />
+              ))}
+              <CreateNewList />
+            </Stack>
+          </SortableContext>
+          <DragOverlay
+            dropAnimation={{
+              sideEffects: defaultDropAnimationSideEffects({
+                styles: {
+                  active: {
+                    opacity: '0.4',
+                  },
+                },
+              }),
             }}
           >
-            {boardListData?.map((item) => (
-              <ListSortableItem
-                key={item.public_id}
-                id={item.public_id}
-                item={item}
-              />
-            ))}
-            <CreateNewList />
-          </Stack>
-        </SortableContext>
-        <DragOverlay
-          dropAnimation={{
-            sideEffects: defaultDropAnimationSideEffects({
-              styles: {
-                active: {
-                  opacity: '0.4',
-                },
-              },
-            }),
-          }}
-        >
-          {renderDragOverlay()}
-        </DragOverlay>
-      </DndContext>
-    </SidebarLayout>
+            {renderDragOverlay()}
+          </DragOverlay>
+        </DndContext>
+      </SidebarLayout>
+      <ModalTaskDetail />
+    </>
   );
 };
 
