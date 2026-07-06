@@ -1,3 +1,4 @@
+import { Delete } from '@mui/icons-material';
 import { Box, Button, colors, Stack, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 
@@ -23,6 +24,9 @@ const ModalTaskDetail = () => {
     editDueDate,
     setEditDueDate,
     detailProjectData,
+    isShowConfirmDelete,
+    setIsShowConfirmDelete,
+    handleDeleteTask,
   } = useModalTaskDetail();
 
   const projectDueDate = detailProjectData?.due_date
@@ -228,6 +232,64 @@ const ModalTaskDetail = () => {
     );
   };
 
+  const renderTaskDetailActions = () => {
+    return (
+      <Stack
+        sx={{
+          position: 'sticky',
+          bottom: 0,
+          background: 'white',
+          p: 2,
+          justifyContent: 'flex-end',
+          gap: 1,
+          borderTop: `1px solid ${colors.grey[300]}`,
+        }}
+        direction={'row'}
+      >
+        {isShowConfirmDelete ? (
+          <Stack direction={'row'} sx={{ gap: 1, alignItems: 'center' }}>
+            <Typography variant="body2">Confirm delete ?</Typography>
+            <Button
+              type="button"
+              color="error"
+              onClick={handleDeleteTask}
+              disabled={isLoading}
+            >
+              Yes
+            </Button>
+            <Button
+              variant="text"
+              onClick={() => setIsShowConfirmDelete(false)}
+              disabled={isLoading}
+            >
+              Cancel
+            </Button>
+          </Stack>
+        ) : (
+          <>
+            <Button
+              startIcon={<Delete />}
+              variant="outlined"
+              color="error"
+              onClick={() => setIsShowConfirmDelete(true)}
+              disabled={isLoading}
+            >
+              Delete
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={handleClose}
+              disabled={isLoading}
+            >
+              Close
+            </Button>
+          </>
+        )}
+      </Stack>
+    );
+  };
+
+  // add delete task card detail
   return (
     <Modal
       open={taskId}
@@ -264,6 +326,7 @@ const ModalTaskDetail = () => {
           {renderDueDate()}
         </Stack>
       </Stack>
+      {renderTaskDetailActions()}
     </Modal>
   );
 };
