@@ -28,7 +28,7 @@ const Select = ({
         };
 
         return (
-          <FormControl fullWidth>
+          <FormControl size={props.size} fullWidth>
             <InputLabel id={id}>{label}</InputLabel>
             <BaseSelect
               {...props}

@@ -14,7 +14,7 @@ const cards = {
     return network.get(`/api/v1/cards/${cardId}`);
   },
   // miss di be -> buat dulu
-  async addAssignment(cardId, assignees) {
+  async addAssignees(cardId, assignees) {
     return network.post(`/api/v1/cards/${cardId}/assignees`, {
       user_id: assignees,
     });

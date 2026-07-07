@@ -1,0 +1,116 @@
+import { Person, PlusOne } from '@mui/icons-material';
+import { Button, colors, Stack, Typography } from '@mui/material';
+
+import useTaskAssignees from '../hooks/useTaskAssignees';
+
+import Select from '@/components/ui/forms/select';
+
+const TaskAssignees = (params) => {
+  const {
+    isLoading,
+    formTaskAssignees,
+    onSubmitTaskAssignees,
+    membersData,
+    taskDetailData,
+    showFormAssignees,
+    setShowFormAssignees,
+  } = useTaskAssignees();
+
+  return (
+    <Stack sx={{ gap: 2 }}>
+      <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        Assignee
+      </Typography>
+      <Stack sx={{ gap: 2 }}>
+        {taskDetailData?.assignees?.map((item) => (
+          <Stack
+            direction={'row'}
+            sx={{
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              border: `1px solid ${colors.grey[300]}`,
+              borderRadius: 1,
+              p: 1,
+            }}
+          >
+            <Stack
+              direction={'row'}
+              sx={{
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
+              <Person />
+              <Typography
+                variant="body2"
+                sx={{
+                  color: colors.grey[700],
+                }}
+              >
+                {item.user.name}
+              </Typography>
+            </Stack>
+          </Stack>
+        ))}
+      </Stack>
+      {showFormAssignees ? (
+        <Stack
+          sx={{
+            gap: 1,
+          }}
+          component={'form'}
+          onSubmit={formTaskAssignees.handleSubmit(onSubmitTaskAssignees)}
+        >
+          <Select
+            control={formTaskAssignees.control}
+            name={'members'}
+            label={'Select members'}
+            options={membersData?.map((item) => ({
+              label: item.name,
+              value: item.public_id,
+            }))}
+            size={'small'}
+            multiple
+          />
+          <Stack
+            direction={'row'}
+            sx={{
+              justifyContent: 'flex-end',
+              gap: 1,
+            }}
+          >
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={isLoading}
+              size="small"
+            >
+              Save
+            </Button>
+            <Button
+              type="button"
+              variant="outlined"
+              disabled={isLoading}
+              size="small"
+              onClick={() => setShowFormAssignees(false)}
+            >
+              Cancel
+            </Button>
+          </Stack>
+        </Stack>
+      ) : (
+        <Button
+          type="button"
+          variant="outlined"
+          startIcon={<PlusOne />}
+          onClick={() => setShowFormAssignees(true)}
+        >
+          Add assignee
+        </Button>
+      )}
+    </Stack>
+  );
+};
+
+export default TaskAssignees;

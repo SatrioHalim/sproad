@@ -2,6 +2,7 @@ import { Delete } from '@mui/icons-material';
 import { Box, Button, colors, Stack, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 
+import TaskAssignees from './components/TaskAssignees';
 import useModalTaskDetail from './hooks/useModalTaskDetail';
 
 import DatePicker from '@/components/ui/forms/datepicker';
@@ -324,6 +325,7 @@ const ModalTaskDetailContainer = () => {
           }}
         >
           {renderDueDate()}
+          <TaskAssignees />
         </Stack>
       </Stack>
       {renderTaskDetailActions()}

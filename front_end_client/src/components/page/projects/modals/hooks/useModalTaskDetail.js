@@ -22,6 +22,10 @@ const useModalTaskDetail = () => {
   const detailProjectContext = useDetailProjectContext();
   const modalTaskDetailContext = useModalTaskDetailContext();
 
+  const taskId = modalTaskDetailContext.taskId;
+  const listId = modalTaskDetailContext.listId;
+  const taskDetailData = modalTaskDetailContext.taskDetailData;
+
   const formTask = useForm({
     defaultValues: {
       title: '',
@@ -29,11 +33,6 @@ const useModalTaskDetail = () => {
       due_date: null,
     },
   });
-
-  const fetchTaskDetail = async (taskId) => {
-    const response = await services.cards.getDetail(taskId);
-    setTaskDetailData(response.data.data);
-  };
 
   useEffect(() => {
     if (!taskDetailData?.public_id) return;
@@ -80,44 +79,38 @@ const useModalTaskDetail = () => {
     await detailProjectContext.fetchBoardLists();
   };
 
-  useEffect(() => {
-    if (taskId && listId) {
-      let isActive = true;
+  // useEffect(() => {
+  //   if (taskId && listId) {
+  //     let isActive = true;
 
-      const loadTaskDetail = async () => {
-        const response = await services.cards.getDetail(taskId);
-        if (isActive) {
-          setTaskDetailData(response.data.data);
-        }
-      };
+  //     const loadTaskDetail = async () => {
+  //       const response = await services.cards.getDetail(taskId);
+  //       if (isActive) {
+  //         setTaskDetailData(response.data.data);
+  //       }
+  //     };
 
-      loadTaskDetail();
+  //     loadTaskDetail();
 
-      return () => {
-        isActive = false;
-      };
-    }
-  }, [taskId, listId]);
+  //     return () => {
+  //       isActive = false;
+  //     };
+  //   }
+  // }, [taskId, listId]);
 
   return {
-    searchParams,
     taskDetailData,
     isLoading,
     editDescription,
     editTitle,
     editDueDate,
-    editAssignee,
     isShowConfirmDelete,
-    setSearchParams,
-    setTaskDetailData,
     setIsLoading,
     setEditDescription,
     setEditTitle,
     setEditDueDate,
-    setEditAssignee,
     setIsShowConfirmDelete,
     detailProjectData,
-    detailProjectContext,
     taskId,
     listId,
     formTask,
