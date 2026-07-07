@@ -5,24 +5,22 @@ import { useLoaderData, useSearchParams } from 'react-router';
 
 import useDetailProjectContext from '../../detail_project/hooks/useDetailProjectContext';
 
+import useModalTaskDetailContext from './useModalTaskDetailContext';
+
 import services from '@/services';
 import datetime from '@/utils/datetime';
 
 const useModalTaskDetail = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [taskDetailData, setTaskDetailData] = useState({});
+  const [_, setSearchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [editDescription, setEditDescription] = useState(false);
   const [editTitle, setEditTitle] = useState(false);
   const [editDueDate, setEditDueDate] = useState(false);
-  const [editAssignee, setEditAssignee] = useState(false);
   const [isShowConfirmDelete, setIsShowConfirmDelete] = useState(false);
 
   const detailProjectData = useLoaderData();
   const detailProjectContext = useDetailProjectContext();
-
-  const taskId = searchParams.get('taskId');
-  const listId = searchParams.get('listId');
+  const modalTaskDetailContext = useModalTaskDetailContext();
 
   const formTask = useForm({
     defaultValues: {
