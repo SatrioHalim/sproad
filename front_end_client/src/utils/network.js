@@ -2,8 +2,10 @@ import axios from 'axios';
 
 import session from './session';
 
+export const API_BASE_URL = 'http://127.0.0.1:3030';
+
 const network = axios.create({
-  baseURL: 'http://127.0.0.1:3030',
+  baseURL: API_BASE_URL,
 });
 
 // buat nambahin token ke header setiap request

@@ -19,6 +19,12 @@ const cards = {
       user_id: assignees,
     });
   },
+  async uploadAttachment(cardId, payload) {
+    return network.post(`api/v1/cards/${cardId}/attachments`, payload);
+  },
+  async deleteAttachment(cardId, attachmentId) {
+    return network.delete(`api/v1/cards/${cardId}/attachments/${attachmentId}`);
+  },
 };
 
 export default cards;
