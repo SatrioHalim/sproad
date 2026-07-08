@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"os"
+	"path/filepath"
 
 	"github.com/SatrioHalim/Go-x-React-Journey/config"
 	"github.com/SatrioHalim/Go-x-React-Journey/controllers"
@@ -17,13 +19,23 @@ import (
 func main() {
 	config.LoadEnv()
 	config.ConnectDB()
-	log.Println("Current environment: ",config.AppConfig.Env)
+	log.Println("Current environment: ", config.AppConfig.Env)
 	if config.AppConfig.Env == "production" {
-		utils.RunMigration() // kalau pake docker	
+		utils.RunMigration() // kalau pake docker
 	}
 
 	seed.SeedAdmin()
+	if err := os.MkdirAll("files", 0755); err != nil {
+		log.Fatal("Failed to prepare files directory:", err)
+	}
 	app := fiber.New()
+	app.Get("/files/*", func(ctx fiber.Ctx) error {
+		requested := filepath.Base(ctx.Params("*"))
+		if requested == "." || requested == "" {
+			return fiber.ErrNotFound
+		}
+		return ctx.SendFile(filepath.Join("files", requested))
+	})
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: config.AppConfig.CORSAllowOrigins,
 		AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
@@ -38,7 +50,7 @@ func main() {
 	// Board handling
 	boardRepo := repositories.NewBoardRepository()
 	boardMemberRepo := repositories.NewBoardMemberRepository()
-	boardService := services.NewBoardService(boardRepo,userRepo,boardMemberRepo)
+	boardService := services.NewBoardService(boardRepo, userRepo, boardMemberRepo)
 
 	// List handling
 	listPositionRepo := repositories.NewListPositionRepository()
@@ -52,10 +64,10 @@ func main() {
 	listController := controllers.NewListController(listService, cardService)
 	cardController := controllers.NewCardController(cardService)
 
-	routes.Setup(app, userController,boardController,listController,cardController)
+	routes.Setup(app, userController, boardController, listController, cardController)
 
 	port := config.AppConfig.AppPort
-	log.Println("Server is running on port :",port)
-	log.Fatal(app.Listen(":"+port))
+	log.Println("Server is running on port :", port)
+	log.Fatal(app.Listen(":" + port))
 
 }

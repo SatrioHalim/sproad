@@ -3,13 +3,13 @@ import { Box, Button, colors, Stack, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 
 import TaskAssignees from './components/TaskAssignees';
+import TaskAttachments from './components/TaskAttachments';
 import useModalTaskDetail from './hooks/useModalTaskDetail';
 
 import DatePicker from '@/components/ui/forms/datepicker';
 import TextField from '@/components/ui/forms/textfield';
 import Modal from '@/components/ui/modal';
 import datetime from '@/utils/datetime';
-import TaskAttachments from './components/TaskAttachments';
 
 const ModalTaskDetailContainer = () => {
   const {
@@ -327,7 +327,7 @@ const ModalTaskDetailContainer = () => {
         >
           {renderDueDate()}
           <TaskAssignees />
-          <TaskAttachments></TaskAttachments>
+          <TaskAttachments />
         </Stack>
       </Stack>
       {renderTaskDetailActions()}

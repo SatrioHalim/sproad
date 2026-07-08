@@ -10,15 +10,12 @@ const TaskAssignees = () => {
     isLoading,
     formTaskAssignees,
     onSubmitTaskAssignees,
-    membersData,
-    taskDetailData,
+    availableMembers,
+    currentAssignees,
     showFormAssignees,
     setShowFormAssignees,
+    handleCancelAssignees,
   } = useTaskAssignees();
-
-  const assignees = Array.isArray(taskDetailData?.assignees)
-    ? taskDetailData.assignees
-    : [];
 
   const getAssigneeLabel = (item) => {
     return item?.user?.name || item?.name || 'Unknown user';
@@ -30,7 +27,7 @@ const TaskAssignees = () => {
         Assignee
       </Typography>
       <Stack sx={{ gap: 2 }}>
-        {assignees.map((item, index) => (
+        {currentAssignees.map((item, index) => (
           <Stack
             key={item?.public_id || `${getAssigneeLabel(item)}-${index}`}
             direction={'row'}
@@ -75,7 +72,7 @@ const TaskAssignees = () => {
             control={formTaskAssignees.control}
             name={'members'}
             label={'Select members'}
-            options={membersData?.map((item) => ({
+            options={availableMembers?.map((item) => ({
               label: item.name,
               value: item.public_id,
             }))}
@@ -102,7 +99,7 @@ const TaskAssignees = () => {
               variant="outlined"
               disabled={isLoading}
               size="small"
-              onClick={() => setShowFormAssignees(false)}
+              onClick={handleCancelAssignees}
             >
               Cancel
             </Button>

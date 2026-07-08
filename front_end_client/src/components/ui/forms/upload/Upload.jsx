@@ -9,11 +9,22 @@ const Upload = ({ control, name, ...props }) => {
       name={name}
       render={({ field: { onChange, onBlur, value } }) => {
         const handleChange = (e) => {
-          const files = [];
+          const selectedFiles = [];
           for (let i = 0; i < e.target.files.length; i++) {
-            files.push(e.target.files[i]);
+            selectedFiles.push(e.target.files[i]);
           }
-          onChange(files);
+          const currentFiles = Array.isArray(value) ? value : [];
+          const mergedFiles = [...currentFiles, ...selectedFiles].filter(
+            (file, index, self) =>
+              index ===
+              self.findIndex(
+                (candidate) =>
+                  candidate.name === file.name &&
+                  candidate.size === file.size &&
+                  candidate.lastModified === file.lastModified,
+              ),
+          );
+          onChange(mergedFiles);
           e.target.value = '';
         };
 
@@ -25,10 +36,10 @@ const Upload = ({ control, name, ...props }) => {
               role="button"
               variant="outlined"
               tabIndex={-1}
-              startIcon={<CloudUpload></CloudUpload>}
+              startIcon={<CloudUpload />}
             >
               {value && value.length > 0
-                ? `Upload ${value.length} file`
+                ? `Upload ${value.length} file${value.length > 1 ? 's' : ''}`
                 : `Upload attachment`}
               <input
                 type="file"
@@ -44,7 +55,7 @@ const Upload = ({ control, name, ...props }) => {
           </FormControl>
         );
       }}
-    ></Controller>
+    />
   );
 };
 

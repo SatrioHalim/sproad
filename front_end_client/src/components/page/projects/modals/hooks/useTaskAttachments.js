@@ -1,8 +1,10 @@
-import { useState } from 'react';
-import useModalTaskDetailContext from './useModalTaskDetailContext';
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
+
+import useModalTaskDetailContext from './useModalTaskDetailContext';
+
 import services from '@/services';
 
 const taskAttachmentSchema = Yup.object({
@@ -31,24 +33,36 @@ const useTaskAttachments = () => {
 
   const onSubmitTaskAttachment = async (values) => {
     setLoading(true);
-    const formData = new FormData();
-    formData.append('file', values.attachments[0]);
-    await services.cards.uploadAttachment(taskDetailData.public_id, formData);
-    await fetchTaskDetail(taskId);
-    setLoading(false);
+    try {
+      const formData = new FormData();
+      values.attachments.forEach((file) => {
+        formData.append('files', file);
+      });
+      await services.cards.uploadAttachment(taskDetailData.public_id, formData);
+      await fetchTaskDetail(taskId);
+      formTaskAttachment.reset({
+        attachments: [],
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onDeleteTaskAttachment = async (attachmentId) => {
     setLoading(true);
-
-    await services.cards.deleteAttachment(
-      taskDetailData.public_id,
-      attachmentId,
-    );
-    await fetchTaskDetail(taskId);
-
-    setLoading(false);
-    setShowConfirmDeleteTaskAttachment(false);
+    try {
+      await services.cards.deleteAttachment(
+        taskDetailData.public_id,
+        attachmentId,
+      );
+      await fetchTaskDetail(taskId);
+    } finally {
+      setLoading(false);
+      setShowConfirmDeleteTaskAttachment({
+        show: false,
+        item: null,
+      });
+    }
   };
 
   return {

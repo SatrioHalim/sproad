@@ -3,7 +3,10 @@ package services
 import (
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/SatrioHalim/Go-x-React-Journey/config"
@@ -21,6 +24,9 @@ type CardService interface {
 	GetByListID(listPublicID string) ([]models.Card, error)
 	GetByID(id uint) (*models.Card, error)
 	GetByPublicID(publicID string) (*models.Card, error)
+	AddAssignees(cardPublicID string, userPublicIDs []string) error
+	AddAttachments(cardPublicID string, userPublicID string, storedFiles []string) error
+	DeleteAttachment(cardPublicID string, attachmentPublicID string) error
 	UpdatePosition(listPublicID string, positions types.UUIDArray) error
 }
 
@@ -40,14 +46,14 @@ func (s *cardService) Create(card *models.Card, listPublicID string) error {
 	// 1. Ambil list dari listPublicID
 	list, err := s.listRepo.FindByPublicID(listPublicID)
 	if err != nil {
-		return fmt.Errorf("List not found: %w",err)
+		return fmt.Errorf("List not found: %w", err)
 	}
 
 	// 2. Set list internal ID ke card
 	card.ListID = list.InternalID
 
 	// 3. Generate public ID untuk card
-	if card.PublicID == uuid.Nil{
+	if card.PublicID == uuid.Nil {
 		card.PublicID = uuid.New()
 	}
 	card.CreatedAt = time.Now()
@@ -73,8 +79,8 @@ func (s *cardService) Create(card *models.Card, listPublicID string) error {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			// buat baru jika belum ada
 			position = models.CardPosition{
-				PublicID: uuid.New(),
-				ListID: list.InternalID,
+				PublicID:  uuid.New(),
+				ListID:    list.InternalID,
 				CardOrder: types.UUIDArray{card.PublicID},
 			}
 
@@ -89,7 +95,7 @@ func (s *cardService) Create(card *models.Card, listPublicID string) error {
 	} else {
 		// Tambahkan card baru ke urutan
 		position.CardOrder = append(position.CardOrder, card.PublicID)
-		if err := tx.Model(&models.CardPosition{}).Where("internal_id = ?",position.InternalID).Update("card_order",position.CardOrder).Error; err != nil {
+		if err := tx.Model(&models.CardPosition{}).Where("internal_id = ?", position.InternalID).Update("card_order", position.CardOrder).Error; err != nil {
 			tx.Rollback()
 			return fmt.Errorf("Failed to update card position: %w", err)
 		}
@@ -100,7 +106,7 @@ func (s *cardService) Create(card *models.Card, listPublicID string) error {
 		return fmt.Errorf("Failed to commit transaction: %w", err)
 	}
 
-	return  nil
+	return nil
 }
 
 func (s *cardService) Update(card *models.Card, listPublicID string) error {
@@ -129,19 +135,19 @@ func (s *cardService) Update(card *models.Card, listPublicID string) error {
 	if exsistingCard.ListID != newList.InternalID {
 		// hapus dari posisi list lama
 		var oldPos models.CardPosition
-		if err := tx.Where("list_internal_id = ?",exsistingCard.ListID).First(&oldPos).Error; err == nil {
-			filtered := make(types.UUIDArray,0,len(oldPos.CardOrder))
+		if err := tx.Where("list_internal_id = ?", exsistingCard.ListID).First(&oldPos).Error; err == nil {
+			filtered := make(types.UUIDArray, 0, len(oldPos.CardOrder))
 			for _, id := range oldPos.CardOrder {
 				if id != exsistingCard.PublicID {
 					filtered = append(filtered, id)
 				}
 			}
 			// update
-			if err := tx.Model(&models.CardPosition{}).Where("internal_id = ?",oldPos.InternalID).Update("card_order",types.UUIDArray(filtered)).Error; err != nil {
+			if err := tx.Model(&models.CardPosition{}).Where("internal_id = ?", oldPos.InternalID).Update("card_order", types.UUIDArray(filtered)).Error; err != nil {
 				tx.Rollback()
 				return fmt.Errorf("Failed to update old card position: %w", err)
 			}
-		} else if !errors.Is(err,gorm.ErrRecordNotFound){
+		} else if !errors.Is(err, gorm.ErrRecordNotFound) {
 			tx.Rollback()
 			return fmt.Errorf("Failed to get old card position: %w", err)
 		}
@@ -149,10 +155,10 @@ func (s *cardService) Update(card *models.Card, listPublicID string) error {
 		// tambah ke list baru
 		var newPos models.CardPosition
 		res := tx.Where("list_internal_id = ?", newList.InternalID).First(&newPos)
-		if errors.Is(res.Error, gorm.ErrRecordNotFound){
+		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
 			newPos = models.CardPosition{
-				PublicID: uuid.New(),
-				ListID: newList.InternalID,
+				PublicID:  uuid.New(),
+				ListID:    newList.InternalID,
 				CardOrder: types.UUIDArray{exsistingCard.PublicID},
 			}
 			if err := tx.Create(&newPos).Error; err != nil {
@@ -161,7 +167,7 @@ func (s *cardService) Update(card *models.Card, listPublicID string) error {
 			}
 		} else if res.Error == nil {
 			updateOrder := append(newPos.CardOrder, exsistingCard.PublicID)
-			if err := tx.Model(&models.CardPosition{}).Where("internal_id = ?",newPos.InternalID).Update("card_order",types.UUIDArray(updateOrder)).Error; err != nil {
+			if err := tx.Model(&models.CardPosition{}).Where("internal_id = ?", newPos.InternalID).Update("card_order", types.UUIDArray(updateOrder)).Error; err != nil {
 				tx.Rollback()
 				return fmt.Errorf("Failed to update new card position: %w", err)
 			}
@@ -189,7 +195,7 @@ func (s *cardService) Update(card *models.Card, listPublicID string) error {
 	if err := tx.Commit().Error; err != nil {
 		return fmt.Errorf("Failed to commit transaction: %w", err)
 	}
-	
+
 	return nil
 }
 
@@ -208,7 +214,7 @@ func (s *cardService) Delete(id uint) error {
 
 func (s *cardService) GetByListID(listPublicID string) ([]models.Card, error) {
 	// Verifikasi List
-	list,err := s.listRepo.FindByPublicID(listPublicID)
+	list, err := s.listRepo.FindByPublicID(listPublicID)
 	if err != nil {
 		return nil, fmt.Errorf("List not found: %w", err)
 	}
@@ -233,7 +239,7 @@ func (s *cardService) GetByListID(listPublicID string) ([]models.Card, error) {
 	return cards, nil
 }
 
-func sortCardByPositions(cards []models.Card, order []uuid.UUID) []models.Card{
+func sortCardByPositions(cards []models.Card, order []uuid.UUID) []models.Card {
 	// buat map untuk akses cepat
 	orderMap := make(map[uuid.UUID]int)
 	for i, id := range order {
@@ -267,4 +273,123 @@ func (s *cardService) GetByID(id uint) (*models.Card, error) {
 
 func (s *cardService) GetByPublicID(publicID string) (*models.Card, error) {
 	return s.cardRepo.FindByPublicID(publicID)
+}
+
+func (s *cardService) AddAssignees(cardPublicID string, userPublicIDs []string) error {
+	card, err := s.cardRepo.FindByPublicID(cardPublicID)
+	if err != nil {
+		return fmt.Errorf("Card not found: %w", err)
+	}
+
+	existingAssigneeIDs := make(map[uint]bool)
+	for _, assignee := range card.Assignees {
+		existingAssigneeIDs[uint(assignee.UserID)] = true
+	}
+
+	tx := config.DB.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+			panic(r)
+		}
+	}()
+
+	for _, userPublicID := range userPublicIDs {
+		user, err := s.userRepo.FindByPublicID(userPublicID)
+		if err != nil {
+			tx.Rollback()
+			return fmt.Errorf("User not found: %s", userPublicID)
+		}
+		if existingAssigneeIDs[uint(user.InternalID)] {
+			continue
+		}
+
+		assignee := models.CardAssignee{
+			CardID: card.InternalID,
+			UserID: user.InternalID,
+		}
+		if err := tx.Create(&assignee).Error; err != nil {
+			tx.Rollback()
+			return fmt.Errorf("Failed to add assignee: %w", err)
+		}
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		return fmt.Errorf("Failed to commit assignee transaction: %w", err)
+	}
+
+	return nil
+}
+
+func (s *cardService) AddAttachments(cardPublicID string, userPublicID string, storedFiles []string) error {
+	card, err := s.cardRepo.FindByPublicID(cardPublicID)
+	if err != nil {
+		return fmt.Errorf("Card not found: %w", err)
+	}
+
+	user, err := s.userRepo.FindByPublicID(userPublicID)
+	if err != nil {
+		return fmt.Errorf("User not found: %w", err)
+	}
+
+	if len(storedFiles) == 0 {
+		return nil
+	}
+
+	tx := config.DB.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+			panic(r)
+		}
+	}()
+
+	for _, storedFile := range storedFiles {
+		storedFile = strings.TrimSpace(storedFile)
+		if storedFile == "" {
+			continue
+		}
+
+		attachment := models.CardAttachment{
+			PublicID:  uuid.New(),
+			CardID:    card.InternalID,
+			UserID:    user.InternalID,
+			File:      storedFile,
+			CreatedAt: time.Now(),
+		}
+
+		if err := tx.Create(&attachment).Error; err != nil {
+			tx.Rollback()
+			return fmt.Errorf("Failed to save attachment metadata: %w", err)
+		}
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		return fmt.Errorf("Failed to commit attachment transaction: %w", err)
+	}
+
+	return nil
+}
+
+func (s *cardService) DeleteAttachment(cardPublicID string, attachmentPublicID string) error {
+	card, err := s.cardRepo.FindByPublicID(cardPublicID)
+	if err != nil {
+		return fmt.Errorf("Card not found: %w", err)
+	}
+
+	var attachment models.CardAttachment
+	if err := config.DB.Where("card_internal_id = ? AND public_id = ?", card.InternalID, attachmentPublicID).
+		First(&attachment).Error; err != nil {
+		return fmt.Errorf("Attachment not found: %w", err)
+	}
+
+	if err := config.DB.Delete(&models.CardAttachment{}, "public_id = ?", attachment.PublicID).Error; err != nil {
+		return fmt.Errorf("Failed to delete attachment: %w", err)
+	}
+
+	if attachment.File != "" {
+		_ = os.Remove(filepath.Clean(attachment.File))
+	}
+
+	return nil
 }

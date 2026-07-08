@@ -13,17 +13,18 @@ const cards = {
   async getDetail(cardId) {
     return network.get(`/api/v1/cards/${cardId}`);
   },
-  // miss di be -> buat dulu
   async addAssignees(cardId, assignees) {
     return network.post(`/api/v1/cards/${cardId}/assignees`, {
       user_id: assignees,
     });
   },
   async uploadAttachment(cardId, payload) {
-    return network.post(`api/v1/cards/${cardId}/attachments`, payload);
+    return network.post(`/api/v1/cards/${cardId}/attachments`, payload);
   },
   async deleteAttachment(cardId, attachmentId) {
-    return network.delete(`api/v1/cards/${cardId}/attachments/${attachmentId}`);
+    return network.delete(
+      `/api/v1/cards/${cardId}/attachments/${attachmentId}`,
+    );
   },
 };
 

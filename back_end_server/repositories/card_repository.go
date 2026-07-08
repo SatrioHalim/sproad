@@ -23,7 +23,6 @@ type CardRepository interface {
 }
 
 type cardRepository struct {
-
 }
 
 func NewCardRepository() CardRepository {
@@ -50,29 +49,31 @@ func (r *cardRepository) FindByID(id uint) (*models.Card, error) {
 
 func (r *cardRepository) FindByPublicID(publicID string) (*models.Card, error) {
 	var card models.Card
-	if err := config.DB.Preload("Assignees.User", func (tx *gorm.DB) *gorm.DB  {
-		return tx.Select("internal_id","public_id","name","email")
-	}).Preload("Attachments").Where("public_id = ?",publicID).First(&card).Error; err != nil {
+	if err := config.DB.Preload("Assignees.User", func(tx *gorm.DB) *gorm.DB {
+		return tx.Select("internal_id", "public_id", "name", "email")
+	}).Preload("Attachments", func(tx *gorm.DB) *gorm.DB {
+		return tx.Order("created_at ASC")
+	}).Where("public_id = ?", publicID).First(&card).Error; err != nil {
 		return nil, err
 	}
 
 	baseUrl := config.AppConfig.AppURL
 	for i := range card.Attachments {
-		card.Attachments[i].FileURL = fmt.Sprintf("%s/files/%s",baseUrl,filepath.Base(card.Attachments[i].File))
+		card.Attachments[i].FileURL = fmt.Sprintf("%s/files/%s", baseUrl, filepath.Base(card.Attachments[i].File))
 	}
 	return &card, nil
 }
 
 func (r *cardRepository) FindByListID(listID string) ([]models.Card, error) {
 	var cards []models.Card
-	err := config.DB.Joins("JOIN lists ON lists.internal_id = cards.list_internal_id").Where("lists.public_id = ?",listID).Order("position ASC").Find(&cards).Error
-	
+	err := config.DB.Joins("JOIN lists ON lists.internal_id = cards.list_internal_id").Where("lists.public_id = ?", listID).Order("position ASC").Find(&cards).Error
+
 	return cards, err
 }
 
 func (r *cardRepository) FindCardPositionByListID(id int64) (*models.CardPosition, error) {
 	var position models.CardPosition
-	err := config.DB.Where("list_internal_id = ?",id).First(&position).Error
+	err := config.DB.Where("list_internal_id = ?", id).First(&position).Error
 	if err != nil {
 		return nil, err
 	}

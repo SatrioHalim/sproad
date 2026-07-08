@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import useModalTaskDetailContext from './useModalTaskDetailContext';
@@ -35,6 +35,38 @@ const useTaskAssignees = () => {
     return [];
   };
 
+  const getAssigneeId = (item) =>
+    item?.user?.public_id ||
+    item?.public_id ||
+    item?.user_public_id ||
+    item?.user_id ||
+    item?.id ||
+    null;
+
+  const currentAssignees = useMemo(() => {
+    return normalizeAssignees(taskDetailData);
+  }, [taskDetailData]);
+
+  const currentAssigneeIds = useMemo(() => {
+    return new Set(currentAssignees.map(getAssigneeId).filter(Boolean));
+  }, [currentAssignees]);
+
+  const availableMembers = useMemo(() => {
+    return Array.isArray(membersData)
+      ? membersData.filter(
+          (item) =>
+            !currentAssigneeIds.has(item.public_id) &&
+            !currentAssigneeIds.has(item.id),
+        )
+      : [];
+  }, [membersData, currentAssigneeIds]);
+
+  useEffect(() => {
+    formTaskAssignees.reset({
+      members: [],
+    });
+  }, [taskDetailData?.public_id, formTaskAssignees]);
+
   const onSubmitTaskAssignees = async (values) => {
     if (!taskDetailData?.public_id || !taskId) return;
 
@@ -43,15 +75,23 @@ const useTaskAssignees = () => {
       : values.members
         ? [values.members]
         : [];
+    const nextMembers = selectedMembers.filter(
+      (memberId) =>
+        !currentAssigneeIds.has(memberId) &&
+        !currentAssigneeIds.has(String(memberId)),
+    );
 
-    if (selectedMembers.length === 0) {
+    if (nextMembers.length === 0) {
       setShowFormAssignees(false);
+      formTaskAssignees.reset({
+        members: [],
+      });
       return;
     }
 
     setLoading(true);
     try {
-      const optimisticAssignees = selectedMembers.map((memberId) => {
+      const optimisticAssignees = nextMembers.map((memberId) => {
         const member = membersData?.find(
           (item) => item.public_id === memberId || item.id === memberId,
         );
@@ -65,39 +105,53 @@ const useTaskAssignees = () => {
         };
       });
 
-      setTaskDetailData((prev) => ({
-        ...prev,
-        assignees: [
+      setTaskDetailData((prev) => {
+        const nextAssignees = [
           ...normalizeAssignees(prev),
-          ...optimisticAssignees.filter(
-            (item, index, self) =>
-              index ===
-              self.findIndex(
-                (candidate) => candidate.public_id === item.public_id,
-              ),
-          ),
-        ],
-      }));
+          ...optimisticAssignees,
+        ].filter(
+          (item, index, self) =>
+            index ===
+            self.findIndex(
+              (candidate) => getAssigneeId(candidate) === getAssigneeId(item),
+            ),
+        );
 
-      await services.cards.addAssignees(
-        taskDetailData.public_id,
-        selectedMembers,
-      );
+        return {
+          ...prev,
+          assignees: nextAssignees,
+        };
+      });
+
+      await services.cards.addAssignees(taskDetailData.public_id, nextMembers);
       await fetchTaskDetail(taskId);
+      formTaskAssignees.reset({
+        members: [],
+      });
     } finally {
       setLoading(false);
       setShowFormAssignees(false);
     }
   };
 
+  const handleCancelAssignees = () => {
+    formTaskAssignees.reset({
+      members: [],
+    });
+    setShowFormAssignees(false);
+  };
+
   return {
     isLoading,
     membersData,
+    availableMembers,
+    currentAssignees,
     formTaskAssignees,
     onSubmitTaskAssignees,
     taskDetailData,
     showFormAssignees,
     setShowFormAssignees,
+    handleCancelAssignees,
   };
 };
 

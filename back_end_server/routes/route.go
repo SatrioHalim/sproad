@@ -9,41 +9,41 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func Setup(app *fiber.App, 
+func Setup(app *fiber.App,
 	uc *controllers.UserController,
 	bc *controllers.BoardController,
 	lc *controllers.ListController,
 	cc *controllers.CardController,
-	){
+) {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	app.Post("/v1/auth/register",uc.Register)
-	app.Post("/v1/auth/login",uc.Login)
-	
+	app.Post("/v1/auth/register", uc.Register)
+	app.Post("/v1/auth/login", uc.Login)
+
 	// JWT Protected routes : biar ga sembarangan orang bisa akses
 	api := app.Group("/api/v1", middleware.JWTAuth())
 
 	// User routes
 	userGroup := api.Group("/users")
-	userGroup.Get("/page",uc.GetUserPagination) // /api/v1/users/page
-	userGroup.Get("/:id",uc.GetUser) // /api/v1/users/:id
-	userGroup.Put("/:id",uc.UpdateUser)
-	userGroup.Delete("/:id",uc.DeleteUser)
+	userGroup.Get("/page", uc.GetUserPagination) // /api/v1/users/page
+	userGroup.Get("/:id", uc.GetUser)            // /api/v1/users/:id
+	userGroup.Put("/:id", uc.UpdateUser)
+	userGroup.Delete("/:id", uc.DeleteUser)
 
 	// Board routes
 	boardGroup := api.Group("/boards")
-	boardGroup.Post("/",bc.CreateBoard)
-	boardGroup.Put("/:id",bc.UpdateBoard)
-	boardGroup.Post("/:id/members",bc.AddBoardMembers)
-	boardGroup.Get("/:id/members",bc.GetBoardMembers)
-	boardGroup.Delete("/:id/members",bc.RemoveBoardMembers)
-	boardGroup.Put("/:id/positions",bc.UpdateListPosition)
-	boardGroup.Get("/my",bc.GetMyBoardPaginate)
-	boardGroup.Get("/:id",bc.GetBoardByID)
-	boardGroup.Get("/:board_id/lists",lc.GetListOnBoard)
+	boardGroup.Post("/", bc.CreateBoard)
+	boardGroup.Put("/:id", bc.UpdateBoard)
+	boardGroup.Post("/:id/members", bc.AddBoardMembers)
+	boardGroup.Get("/:id/members", bc.GetBoardMembers)
+	boardGroup.Delete("/:id/members", bc.RemoveBoardMembers)
+	boardGroup.Put("/:id/positions", bc.UpdateListPosition)
+	boardGroup.Get("/my", bc.GetMyBoardPaginate)
+	boardGroup.Get("/:id", bc.GetBoardByID)
+	boardGroup.Get("/:board_id/lists", lc.GetListOnBoard)
 
 	// List routes
 	listGroup := api.Group("/lists")
@@ -55,8 +55,11 @@ func Setup(app *fiber.App,
 
 	// Card routes
 	cardGroup := api.Group("/cards")
-	cardGroup.Post("/",cc.CreateCard)
-	cardGroup.Put("/:id",cc.UpdateCard)
-	cardGroup.Delete("/:id",cc.DeleteCard)
-	cardGroup.Get("/:id",cc.GetCardDetail)
+	cardGroup.Post("/", cc.CreateCard)
+	cardGroup.Put("/:id", cc.UpdateCard)
+	cardGroup.Post("/:id/assignees", cc.AddCardAssignees)
+	cardGroup.Post("/:id/attachments", cc.AddCardAttachments)
+	cardGroup.Delete("/:id/attachments/:attachment_id", cc.DeleteCardAttachment)
+	cardGroup.Delete("/:id", cc.DeleteCard)
+	cardGroup.Get("/:id", cc.GetCardDetail)
 }
