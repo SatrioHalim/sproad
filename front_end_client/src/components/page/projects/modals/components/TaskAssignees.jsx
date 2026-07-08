@@ -5,7 +5,7 @@ import useTaskAssignees from '../hooks/useTaskAssignees';
 
 import Select from '@/components/ui/forms/select';
 
-const TaskAssignees = (params) => {
+const TaskAssignees = () => {
   const {
     isLoading,
     formTaskAssignees,
@@ -16,14 +16,23 @@ const TaskAssignees = (params) => {
     setShowFormAssignees,
   } = useTaskAssignees();
 
+  const assignees = Array.isArray(taskDetailData?.assignees)
+    ? taskDetailData.assignees
+    : [];
+
+  const getAssigneeLabel = (item) => {
+    return item?.user?.name || item?.name || 'Unknown user';
+  };
+
   return (
     <Stack sx={{ gap: 2 }}>
       <Typography variant="h5" sx={{ fontWeight: 700 }}>
         Assignee
       </Typography>
       <Stack sx={{ gap: 2 }}>
-        {taskDetailData?.assignees?.map((item) => (
+        {assignees.map((item, index) => (
           <Stack
+            key={item?.public_id || `${getAssigneeLabel(item)}-${index}`}
             direction={'row'}
             sx={{
               justifyContent: 'space-between',
@@ -48,7 +57,7 @@ const TaskAssignees = (params) => {
                   color: colors.grey[700],
                 }}
               >
-                {item.user.name}
+                {getAssigneeLabel(item)}
               </Typography>
             </Stack>
           </Stack>

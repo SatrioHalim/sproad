@@ -27,8 +27,12 @@ const ModalTaskDetailProvider = ({ children }) => {
   const listId = searchParams.get('listId');
 
   const fetchTaskDetail = async (taskId) => {
+    if (!taskId) return null;
+
     const response = await services.cards.getDetail(taskId);
-    setTaskDetailData(response.data.data);
+    const nextTaskDetail = response?.data?.data ?? response?.data ?? {};
+    setTaskDetailData(nextTaskDetail);
+    return nextTaskDetail;
   };
 
   const fetchProjectMembers = async (boardId) => {
@@ -53,6 +57,7 @@ const ModalTaskDetailProvider = ({ children }) => {
         taskId,
         listId,
         taskDetailData,
+        setTaskDetailData,
         fetchTaskDetail,
         fetchProjectMembers,
         membersData,

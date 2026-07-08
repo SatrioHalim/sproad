@@ -25,6 +25,7 @@ const useModalTaskDetail = () => {
   const taskId = modalTaskDetailContext.taskId;
   const listId = modalTaskDetailContext.listId;
   const taskDetailData = modalTaskDetailContext.taskDetailData;
+  const fetchTaskDetail = modalTaskDetailContext.fetchTaskDetail;
 
   const formTask = useForm({
     defaultValues: {
@@ -46,24 +47,35 @@ const useModalTaskDetail = () => {
           ? dayjs(taskDetailData.due_date)
           : null,
     });
-  }, [taskDetailData, formTask]);
+  }, [
+    taskDetailData?.public_id,
+    taskDetailData?.title,
+    taskDetailData?.description,
+    taskDetailData?.due_date,
+    formTask.reset,
+  ]);
 
   const onSubmit = async (values) => {
+    if (!taskDetailData?.public_id) return;
+
     setIsLoading(true);
-    await services.cards.update(taskDetailData.public_id, {
-      list_id: listId,
-      title: values.title ?? taskDetailData.title,
-      description: values.description ?? taskDetailData.description,
-      due_date: values.due_date
-        ? datetime.getIsoString(values.due_date)
-        : taskDetailData.due_date,
-      position: taskDetailData.position,
-    });
-    await fetchTaskDetail(taskId);
-    setIsLoading(false);
-    setEditDescription(false);
-    setEditTitle(false);
-    setEditDueDate(false);
+    try {
+      await services.cards.update(taskDetailData.public_id, {
+        list_id: listId,
+        title: values.title ?? taskDetailData.title,
+        description: values.description ?? taskDetailData.description,
+        due_date: values.due_date
+          ? datetime.getIsoString(values.due_date)
+          : taskDetailData.due_date,
+        position: taskDetailData.position,
+      });
+      await fetchTaskDetail(taskId);
+    } finally {
+      setIsLoading(false);
+      setEditDescription(false);
+      setEditTitle(false);
+      setEditDueDate(false);
+    }
   };
 
   const handleDeleteTask = async () => {
