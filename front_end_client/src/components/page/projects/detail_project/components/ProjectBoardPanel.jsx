@@ -23,7 +23,6 @@ import TaskSortableItem from './TaskSortableItem';
 import SidebarLayout from '@/components/layouts/sidebarlayout';
 import { DRAG_CARD, DRAG_LIST } from '@/utils/constants';
 
-
 const ProjectBoardPanel = ({ value }) => {
   const {
     boardListData,
