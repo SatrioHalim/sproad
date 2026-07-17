@@ -15,7 +15,6 @@ import ModalTaskDetail from '../../modals/ModalTaskDetail';
 import useDetailProjectContainer from '../hooks/useDetailProjectContainer';
 
 import CreateNewList from './CreateNewList';
-import DashboardPanel from './DashboardPanel';
 import ListSortableItem from './ListSortableItem';
 import ProjectInfo from './ProjectInfo';
 import TaskSortableItem from './TaskSortableItem';

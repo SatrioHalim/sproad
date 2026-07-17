@@ -5,7 +5,7 @@ import { useState } from 'react';
 import ModalTaskDetail from '../../modals/ModalTaskDetail';
 import useDetailProjectContainer from '../hooks/useDetailProjectContainer';
 
-import DashboardPanel from './DashboardPanel';
+import Dashboard from './dashboard';
 import ProjectBoardPanel from './ProjectBoardPanel';
 
 import SidebarLayout from '@/components/layouts/sidebarlayout';
@@ -40,7 +40,7 @@ const DetailProjectContainer = () => {
             <Tab label="Project" value={2} />
           </TabList>
           {activeTab == 1 ? (
-            <DashboardPanel value={1} />
+            <Dashboard />
           ) : (
             <ProjectBoardPanel value={2} />
           )}
