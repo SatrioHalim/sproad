@@ -222,6 +222,12 @@ func (s *cardService) GetByListID(listPublicID string) ([]models.Card, error) {
 	// ambil card position
 	position, err := s.cardRepo.FindCardPositionByListID(list.InternalID)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			// List yang belum punya card tetap harus dianggap valid.
+			// Frontend nge-fetch semua list sekaligus, jadi return empty slice
+			// supaya satu list kosong tidak memutus refresh seluruh board.
+			return []models.Card{}, nil
+		}
 		return nil, fmt.Errorf("Failed to get card position: %w", err)
 	}
 

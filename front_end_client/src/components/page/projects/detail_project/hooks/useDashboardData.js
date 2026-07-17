@@ -27,7 +27,7 @@ const useDashboardData = () => {
       };
     });
     return taskItems;
-  }, [boardListData]);
+  }, [boardListData, getTaskItemsByListId]);
 
   const taskPercentageSummary = useMemo(() => {
     const taskItems = mergeListAndTaskData;
@@ -37,8 +37,9 @@ const useDashboardData = () => {
     const result = [...taskItems].map((item) => ({
       name: item.title,
       count: item.count,
-      value: Math.floor((item.count / taskItemsTotal) * 100),
+      value: taskItemsTotal > 0 ? Math.floor((item.count / taskItemsTotal) * 100) : 0,
     }));
+    return result;
   }, [mergeListAndTaskData]);
 
   const initDashboardData = useCallback(async () => {
@@ -79,11 +80,11 @@ const useDashboardData = () => {
       setDueSoonTasksSummary(dueSoonTasks);
       setTotalTaskSummary(tasks);
     }
-  }, [mergeListAndTaskData]);
+  }, [mergeListAndTaskData, isLoadingBoardLists]);
 
   useEffect(() => {
     initDashboardData();
-  }, [mergeListAndTaskData, isLoadingBoardLists]);
+  }, [initDashboardData]);
 
   return {
     totalTaskSummary,

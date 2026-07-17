@@ -71,14 +71,23 @@ const DetailProjectProvider = ({ children }) => {
           public_id: item.public_id,
         };
       });
-      const responseCards = await Promise.all(
+      const responseCards = await Promise.allSettled(
         listIds.map((item) => services.lists.getCards(item.public_id)),
       );
 
       const boardListWithCards = [];
 
-      responseCards.forEach((response) => {
-        const cards = response.data.data;
+      responseCards.forEach((result, index) => {
+        if (result.status !== 'fulfilled') {
+          console.warn(
+            'Failed to fetch cards for list:',
+            listIds[index]?.public_id,
+            result.reason,
+          );
+          return;
+        }
+
+        const cards = result.value.data.data;
         cards.forEach((card) => {
           const cardExist = boardListWithCards.findIndex(
             (item) => item.public_id === card.public_id,
