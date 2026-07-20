@@ -1,10 +1,10 @@
+import dayjs from 'dayjs';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import useDetailProjectContext from './useDetailProjectContext';
 
 import services from '@/services';
 import { transformTasksToWorkloadData } from '@/utils/dataTransform';
-import datetime from '@/utils/datetime';
 
 const useDashboardData = () => {
   const [totalTaskSummary, setTotalTaskSummary] = useState([]);
@@ -17,7 +17,7 @@ const useDashboardData = () => {
 
   const mergeListAndTaskData = useMemo(() => {
     const taskItems = boardListData.map((item) => {
-      const { title, public_id } = item;
+      const { title } = item;
       const tasks = getTaskItemsByListId(item.public_id);
       return {
         ...item,
@@ -37,41 +37,60 @@ const useDashboardData = () => {
     const result = [...taskItems].map((item) => ({
       name: item.title,
       count: item.count,
-      value: taskItemsTotal > 0 ? Math.floor((item.count / taskItemsTotal) * 100) : 0,
+      value:
+        taskItemsTotal > 0
+          ? Math.floor((item.count / taskItemsTotal) * 100)
+          : 0,
     }));
     return result;
   }, [mergeListAndTaskData]);
 
   const initDashboardData = useCallback(async () => {
     if (mergeListAndTaskData.length > 0 && !isLoadingBoardLists) {
-      let workload = [];
       const tasks = [];
       const overdueTasks = [];
       const dueSoonTasks = [];
 
-      for (const idx in mergeListAndTaskData) {
-        const items = mergeListAndTaskData[idx];
-        const fetchTasks = await Promise.all(
-          [...items].map((item) => services.cards.getDetail(item.public_id)),
+      for (const items of mergeListAndTaskData) {
+        if (!Array.isArray(items.tasks) || items.tasks.length === 0) {
+          continue;
+        }
+
+        const fetchTasks = await Promise.allSettled(
+          items.tasks.map((item) => services.cards.getDetail(item.public_id)),
         );
-        const taskData = fetchTasks.map((item) => item?.data?.data);
-        taskData.forEach((item) => tasks.push(item));
+
+        fetchTasks.forEach((result) => {
+          if (result.status !== 'fulfilled') {
+            return;
+          }
+
+          const taskData =
+            result.value?.data?.data ?? result.value?.data ?? null;
+          if (taskData) {
+            tasks.push(taskData);
+          }
+        });
       }
 
-      for (const idx in tasks) {
-        const taskItem = tasks[idx];
-        workload = transformTasksToWorkloadData(tasks, taskItem.internal_id);
+      const workload = tasks.length
+        ? transformTasksToWorkloadData(tasks, null)
+        : [];
 
-        const now = datetime.getNow();
-        const isOverdue = datetime.isSameOrAfter(
-          now.toISOString(),
-          taskItem.due_date,
-        );
-        const diff = datetime.getDiff(now.toISOString(), taskItem.due_date);
+      for (const taskItem of tasks) {
+        if (!taskItem?.due_date) {
+          continue;
+        }
 
-        if (isOverdue) {
+        const now = dayjs();
+        const dueDate = dayjs(taskItem.due_date);
+        const daysUntilDue = dueDate
+          .startOf('day')
+          .diff(now.startOf('day'), 'day');
+
+        if (dueDate.valueOf() <= now.valueOf()) {
           overdueTasks.push(taskItem);
-        } else if (diff <= 3 && diff >= 1) {
+        } else if (daysUntilDue >= 1 && daysUntilDue <= 3) {
           dueSoonTasks.push(taskItem);
         }
       }
@@ -83,6 +102,8 @@ const useDashboardData = () => {
   }, [mergeListAndTaskData, isLoadingBoardLists]);
 
   useEffect(() => {
+    // Dashboard metrics are derived from async card-detail fetches.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     initDashboardData();
   }, [initDashboardData]);
 

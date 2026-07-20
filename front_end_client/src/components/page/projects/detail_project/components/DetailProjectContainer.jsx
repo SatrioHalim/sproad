@@ -39,11 +39,7 @@ const DetailProjectContainer = () => {
             <Tab label="Dashboard" value={1} />
             <Tab label="Project" value={2} />
           </TabList>
-          {activeTab == 1 ? (
-            <Dashboard />
-          ) : (
-            <ProjectBoardPanel value={2} />
-          )}
+          {activeTab == 1 ? <Dashboard /> : <ProjectBoardPanel value={2} />}
         </TabContext>
       </SidebarLayout>
       <ModalTaskDetail />

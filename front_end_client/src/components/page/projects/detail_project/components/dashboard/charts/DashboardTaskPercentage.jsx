@@ -1,7 +1,8 @@
-import { getRandomColor } from '@/utils/dataTransform';
 import { Card, CardContent, Stack, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import { Cell, Legend, Pie, PieChart, Tooltip } from 'recharts';
+
+import { getRandomColor } from '@/utils/dataTransform';
 
 const DashboardTaskPercentage = ({ data }) => {
   const RADIAN = Math.PI / 180;
