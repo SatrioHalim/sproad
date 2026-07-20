@@ -1,18 +1,19 @@
-# Sproad (Project Management) API
+# Sproad API
 
-Backend service for a project management application built with Go, Fiber, GORM, and PostgreSQL. This API handles authentication, user management, board collaboration, list management, and card operations for a Trello-style workflow.
+Backend service for the Sproad project management application built with Go, Fiber, GORM, and PostgreSQL. This API powers authentication, user management, boards, lists, cards, members, assignees, and attachments for a Trello-style workflow.
 
 ## Overview
 
-This repository provides the backend layer for a project management platform with:
+This backend provides the core server-side logic for a collaborative project management platform with features such as:
 
 - JWT-based authentication
-- User management
-- Board creation and member management
-- List management inside boards
-- Card management inside lists
+- user and profile management
+- board creation and collaboration
+- list and card workflow management
+- position updates for lists and cards
+- card assignees and attachments
 - PostgreSQL persistence
-- Docker-based local deployment
+- Docker-based local development
 
 ## Tech Stack
 
@@ -27,15 +28,15 @@ This repository provides the backend layer for a project management platform wit
 
 ```text
 .
-|-- config/         # Application config and database connection
+|-- config/         # Application configuration and DB connection
 |-- controllers/    # HTTP handlers
-|-- database/       # SQL migrations and seeders
-|-- middleware/     # Request middleware such as JWT auth
+|-- database/       # Migrations and seed data
+|-- middleware/     # Auth and request middleware
 |-- models/         # Domain and database models
 |-- repositories/   # Data access layer
 |-- routes/         # API route registration
 |-- services/       # Business logic layer
-|-- utils/          # Shared helpers
+|-- utils/          # Shared helper functions
 |-- main.go         # Application entry point
 |-- dockerfile
 `-- docker-compose.yaml
@@ -45,38 +46,38 @@ This repository provides the backend layer for a project management platform wit
 
 ### Authentication
 
-- Register new user
-- Login and receive JWT token
-- Protect private endpoints with JWT middleware
+- register new users
+- login and issue JWT tokens
+- protect private endpoints with middleware
 
 ### Users
 
-- Get user detail
-- Update user profile
-- Delete user
-- Paginated user listing
+- get user detail
+- update user profile
+- delete user
+- paginated user listing
 
 ### Boards
 
-- Create board
-- Update board
-- Get boards owned by the authenticated user
-- Add and remove board members
-- Retrieve lists inside a board
+- create and update boards
+- view boards owned by the authenticated user
+- manage board members
+- retrieve board details and board lists
+- update board list positions
 
 ### Lists
 
-- Create list
-- Update list
-- Delete list
-- Retrieve cards inside a list
+- create and update lists
+- retrieve cards inside a list
+- update card positions inside a list
+- delete lists
 
 ### Cards
 
-- Create card
-- Update card
-- Delete card
-- Get card detail
+- create and update cards
+- add assignees
+- add and remove attachments
+- retrieve card detail
 
 ## API Base Paths
 
@@ -85,37 +86,44 @@ This repository provides the backend layer for a project management platform wit
 
 ## Available Endpoints
 
-### Public
+### Public Endpoints
 
-| Method | Endpoint | Description |
-| --- | --- | --- |
+| Method | Endpoint            | Description         |
+| ------ | ------------------- | ------------------- |
 | `POST` | `/v1/auth/register` | Register a new user |
-| `POST` | `/v1/auth/login` | Authenticate user |
+| `POST` | `/v1/auth/login`    | Authenticate a user |
 
-### Protected
+### Protected Endpoints
 
-All endpoints below require a valid JWT token.
+All protected endpoints below require a valid JWT token.
 
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| `GET` | `/api/v1/users/page` | Get paginated users |
-| `GET` | `/api/v1/users/:id` | Get user detail |
-| `PUT` | `/api/v1/users/:id` | Update user |
-| `DELETE` | `/api/v1/users/:id` | Delete user |
-| `POST` | `/api/v1/boards/` | Create board |
-| `PUT` | `/api/v1/boards/:id` | Update board |
-| `POST` | `/api/v1/boards/:id/members` | Add board members |
-| `DELETE` | `/api/v1/boards/:id/members` | Remove board members |
-| `GET` | `/api/v1/boards/my` | Get authenticated user's boards |
-| `GET` | `/api/v1/boards/:board_id/lists` | Get lists in board |
-| `POST` | `/api/v1/lists/` | Create list |
-| `GET` | `/api/v1/lists/:id/cards` | Get cards in list |
-| `PUT` | `/api/v1/lists/:id` | Update list |
-| `DELETE` | `/api/v1/lists/:id` | Delete list |
-| `POST` | `/api/v1/cards/` | Create card |
-| `PUT` | `/api/v1/cards/:id` | Update card |
-| `DELETE` | `/api/v1/cards/:id` | Delete card |
-| `GET` | `/api/v1/cards/:id` | Get card detail |
+| Method   | Endpoint                                       | Description                      |
+| -------- | ---------------------------------------------- | -------------------------------- |
+| `GET`    | `/api/v1/users/page`                           | Get paginated users              |
+| `GET`    | `/api/v1/users/:id`                            | Get user detail                  |
+| `PUT`    | `/api/v1/users/:id`                            | Update user                      |
+| `DELETE` | `/api/v1/users/:id`                            | Delete user                      |
+| `POST`   | `/api/v1/boards/`                              | Create board                     |
+| `PUT`    | `/api/v1/boards/:id`                           | Update board                     |
+| `POST`   | `/api/v1/boards/:id/members`                   | Add board members                |
+| `GET`    | `/api/v1/boards/:id/members`                   | Get board members                |
+| `DELETE` | `/api/v1/boards/:id/members`                   | Remove board members             |
+| `PUT`    | `/api/v1/boards/:id/positions`                 | Update list positions on a board |
+| `GET`    | `/api/v1/boards/my`                            | Get authenticated user's boards  |
+| `GET`    | `/api/v1/boards/:id`                           | Get board detail                 |
+| `GET`    | `/api/v1/boards/:board_id/lists`               | Get lists in a board             |
+| `POST`   | `/api/v1/lists/`                               | Create list                      |
+| `GET`    | `/api/v1/lists/:id/cards`                      | Get cards in a list              |
+| `PUT`    | `/api/v1/lists/:id`                            | Update list                      |
+| `PUT`    | `/api/v1/lists/:id/positions`                  | Update card positions in a list  |
+| `DELETE` | `/api/v1/lists/:id`                            | Delete list                      |
+| `POST`   | `/api/v1/cards/`                               | Create card                      |
+| `PUT`    | `/api/v1/cards/:id`                            | Update card                      |
+| `POST`   | `/api/v1/cards/:id/assignees`                  | Add card assignees               |
+| `POST`   | `/api/v1/cards/:id/attachments`                | Add card attachments             |
+| `DELETE` | `/api/v1/cards/:id/attachments/:attachment_id` | Remove a card attachment         |
+| `DELETE` | `/api/v1/cards/:id`                            | Delete card                      |
+| `GET`    | `/api/v1/cards/:id`                            | Get card detail                  |
 
 ## Environment Variables
 
@@ -129,7 +137,7 @@ DB_USER=[Your user]
 DB_PASSWORD=[Your password]
 DB_NAME=[Your DB name]
 
-APP_URL=http://localhost:3030 // local
+APP_URL=http://localhost:3030
 CORS_ALLOW_ORIGINS=[client host]
 
 JWT_SECRET=[Your jwt secret]
@@ -182,9 +190,9 @@ Default exposed services:
 
 ## Database Notes
 
-- Database migrations are executed automatically when `ENV=production`
-- Admin seed data is initialized on application startup
-- Migration files are stored in `database/migrations`
+- database migrations are executed automatically when `ENV=production`
+- admin seed data is initialized on application startup
+- migration files are stored in `database/migrations`
 
 ## Architecture Notes
 
@@ -199,16 +207,9 @@ This separation helps keep the project easier to maintain and extend as features
 
 ## Development Notes
 
-- Protected routes use JWT middleware
-- The application uses PostgreSQL as the primary database
+- protected routes use JWT middleware
+- the application uses PostgreSQL as the primary database
 - Docker Compose is the fastest way to boot the full local environment
-
-## Future Improvements
-
-- Add Swagger or OpenAPI documentation
-- Add unit and integration tests
-- Add CI pipeline for linting and automated testing
-- Add structured logging and monitoring
 
 ## License
 
