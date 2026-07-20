@@ -24,6 +24,7 @@ type Config struct {
 	DBUser string
 	DBPassword string
 	DBName string
+	DBSSLMode string
 	JWTSecret string
 	JWTExpireMinutes string
 	JWTRefreshToken string
@@ -45,6 +46,7 @@ func LoadEnv(){
 		DBUser: getEnv("DB_USER", "postgres"),
 		DBPassword: getEnv("DB_PASSWORD","password"),
 		DBName: getEnv("DB_NAME","project_management"),
+		DBSSLMode: getEnv("DB_SSLMODE", "disable"),
 		JWTSecret: getEnv("JWT_SECRET","rahasia"),
 		JWTRefreshToken: getEnv("REFRESH_TOKEN_EXPIRED","24h"),
 		JWTExpire: getEnv("JWT_EXPIRED","6h"),
@@ -90,8 +92,10 @@ func getEnvAsSlice(key string, fallback []string) []string {
 
 func ConnectDB(){
 	cfg := AppConfig
+	sslMode := getEnv("DB_SSLMODE", "disable")
 
-	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname= %s sslmode=disable", cfg.DBHost, cfg.DBPort,cfg.DBUser,cfg.DBPassword,cfg.DBName)
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", 
+	cfg.DBHost, cfg.DBPort, cfg.DBUser, cfg.DBPassword, cfg.DBName, sslMode)
 
 	// Open connection
 	db,err := gorm.Open(postgres.Open(dsn),&gorm.Config{})
