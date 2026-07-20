@@ -214,5 +214,3 @@ This separation helps keep the project easier to maintain and extend as features
 ## License
 
 This project is intended for personal or portfolio use unless stated otherwise by the repository owner.
-
-tes
