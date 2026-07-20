@@ -17,7 +17,7 @@ func Setup(app *fiber.App,
 ) {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Println("Error loading .env file")
 	}
 
 	app.Post("/v1/auth/register", uc.Register)
