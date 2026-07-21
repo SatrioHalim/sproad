@@ -11,6 +11,8 @@ const Sidebar = () => {
         top: 0,
         left: 0,
         height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
         flexGrow: 0,
         flexShrink: 0,
         borderRight: '1px solid #ccc',
