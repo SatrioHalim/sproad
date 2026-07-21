@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 import session from './session';
+import { API_BASE_URL } from './constants';
 
-export const API_BASE_URL = 'http://127.0.0.1:3030';
+export { API_BASE_URL };
 
 const network = axios.create({
   baseURL: API_BASE_URL,
