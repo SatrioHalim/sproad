@@ -34,13 +34,13 @@ const SidebarMenu = () => {
           </ListItemIcon>
           <ListItemText>Project</ListItemText>
         </MenuItem>
-        <Divider />
+        {/* <Divider />
         <MenuItem onClick={() => navigate('/settings')}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
           <ListItemText>Settings</ListItemText>
-        </MenuItem>
+        </MenuItem> */}
       </MenuList>
       <Box
         sx={{

@@ -16,7 +16,7 @@ const Dashboard = () => {
           background: colors.lightBlue[100],
         }}
       >
-        <Typography>Menampilkan dashboard</Typography>
+        <Typography>Showing dashboard</Typography>
       </Paper>
     </SidebarLayout>
   );

@@ -1,8 +1,8 @@
 import { Box, Breadcrumbs, Link, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 
-import Navbar from './Navbar';
-import Sidebar from './Sidebar';
+import Navbar from './navbar';
+import Sidebar from './sidebar';
 
 const SidebarLayout = ({ children, pageTitle = '', breadcrumbs = [] }) => {
   const navigate = useNavigate();
