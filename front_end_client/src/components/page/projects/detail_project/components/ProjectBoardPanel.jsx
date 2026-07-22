@@ -11,7 +11,6 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Stack, Tab, Typography } from '@mui/material';
 import { useState } from 'react';
 
-import ModalTaskDetail from '../../modals/ModalTaskDetail';
 import useDetailProjectContainer from '../hooks/useDetailProjectContainer';
 
 import CreateNewList from './CreateNewList';
@@ -19,7 +18,6 @@ import ListSortableItem from './ListSortableItem';
 import ProjectInfo from './ProjectInfo';
 import TaskSortableItem from './TaskSortableItem';
 
-import SidebarLayout from '@/components/layouts/sidebarlayout';
 import { DRAG_CARD, DRAG_LIST } from '@/utils/constants';
 
 const ProjectBoardPanel = ({ value }) => {

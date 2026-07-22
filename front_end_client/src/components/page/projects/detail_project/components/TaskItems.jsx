@@ -6,7 +6,7 @@ import { Box, colors, Paper, Stack, Typography } from '@mui/material';
 
 import useTaskItems from '../hooks/useTaskItems';
 
-import CreateNewTask from './CreateNewtask';
+import CreateNewTask from './CreateNewTask';
 import TaskSortableItem from './TaskSortableItem';
 
 import { DRAG_CARD } from '@/utils/constants';
