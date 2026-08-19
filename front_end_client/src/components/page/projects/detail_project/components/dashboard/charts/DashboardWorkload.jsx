@@ -68,11 +68,8 @@ const DashboardWorkload = ({ data }) => {
           position: 'insideLeft',
           textAnchor: 'middle',
         }}
-       />
-      <Tooltip
-        content={DashboardWorkloadTooltip}
-        isAnimationActive={true}
-       />
+      />
+      <Tooltip content={DashboardWorkloadTooltip} isAnimationActive={true} />
       <Area
         type={'monotone'}
         dataKey={'taskCount'}
@@ -80,7 +77,7 @@ const DashboardWorkload = ({ data }) => {
         fillOpacity={1}
         fill="url(#colorTaskCount)"
         isAnimationActive={true}
-       />
+      />
     </AreaChart>
   );
 };

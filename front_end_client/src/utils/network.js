@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import session from './session';
 import { API_BASE_URL } from './constants';
+import session from './session';
 
 export { API_BASE_URL };
 

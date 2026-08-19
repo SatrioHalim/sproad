@@ -40,19 +40,19 @@ const Dashboard = () => {
           value={totalTaskSummary.length}
           icon={Assignment}
           color={'#1976d2'}
-         />
+        />
         <DashboardMetric
           title={'Project Task Overdue Total'}
           value={overdueTasksSummary.length}
           icon={AccessTimeFilled}
           color={'#d32f2f'}
-         />
+        />
         <DashboardMetric
           title={'Project Task Due Soon Total'}
           value={dueSoonTasksSummary.length}
           icon={WarningAmber}
           color={'#ffa000'}
-         />
+        />
       </Stack>
       <Stack
         direction={'row'}
@@ -68,9 +68,7 @@ const Dashboard = () => {
           }}
         >
           <Typography variant="h5">Work Distribution</Typography>
-          <DashboardTaskPercentage
-            data={taskPercentageSummary}
-           />
+          <DashboardTaskPercentage data={taskPercentageSummary} />
         </Stack>
         <Stack
           sx={{
