@@ -41,7 +41,7 @@ const DashboardMetric = ({ title, value, icon: IconComponent, color }) => {
                 fontSize: 40,
                 opacity: 0.7,
               }}
-             />
+            />
           )}
         </Stack>
       </CardContent>

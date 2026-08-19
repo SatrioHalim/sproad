@@ -6,6 +6,7 @@ import {
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { Analytics } from '@vercel/analytics/react';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 
 import authLoader from './components/layouts/authlayout/AuthLayout.loader';
@@ -69,6 +70,7 @@ const App = () => {
         <SnackbarProvider>
           <CssBaseline />
           <RouterProvider router={router} />
+          <Analytics />
         </SnackbarProvider>
       </LocalizationProvider>
     </ThemeProvider>

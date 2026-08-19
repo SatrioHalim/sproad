@@ -5,8 +5,18 @@ const session = {
     localStorage.setItem(SESSION_KEY, JSON.stringify(user));
   },
   getSession() {
-    const user = JSON.parse(localStorage.getItem(SESSION_KEY));
-    return user;
+    const rawSession = localStorage.getItem(SESSION_KEY);
+
+    if (!rawSession) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(rawSession);
+    } catch (error) {
+      localStorage.removeItem(SESSION_KEY);
+      return null;
+    }
   },
   clearSession() {
     localStorage.removeItem(SESSION_KEY);
