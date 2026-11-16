@@ -115,6 +115,42 @@ func (c *CardController) GetCardDetail(ctx fiber.Ctx) error {
 	return utils.Success(ctx, "Data fetch successfully", card)
 }
 
+func (c *CardController) AddCardlabel(ctx fiber.Ctx) error {
+	cardId := ctx.Params("id")
+
+	var body struct {
+		LabelID string `json:"label_id"`
+	}
+
+	if err := ctx.Bind().Body(&body); err != nil {
+		return utils.BadRequest(ctx, "Invalid Id", err.Error())
+	}
+
+	if err := c.service.AddLabel(cardId, body.LabelID); err != nil{
+		return utils.BadRequest(ctx, "Failed to add label data", err.Error())
+	}
+
+	return utils.Success(ctx, "Label added successfully", nil)
+}
+
+func (c *CardController) RemoveCardLabel(ctx fiber.Ctx) error {
+	cardId := ctx.Params("id")
+
+	var body struct {
+		LabelID string `json:"label_id"`
+	}
+
+	if err := ctx.Bind().Body(&body); err != nil {
+		return utils.BadRequest(ctx, "Invalid Id", err.Error())
+	}
+
+	if err := c.service.RemoveLabel(cardId, body.LabelID); err != nil{
+		return utils.BadRequest(ctx, "Failed to remove label data", err.Error())
+	}
+
+	return utils.Success(ctx, "Label removed successfully", nil)
+}
+
 func getUserPublicIDFromClaims(ctx fiber.Ctx) (string, error) {
 	claims, ok := ctx.Locals("user").(jwt.MapClaims)
 	if !ok {
@@ -225,3 +261,4 @@ func (c *CardController) DeleteCardAttachment(ctx fiber.Ctx) error {
 
 	return utils.Success(ctx, "Attachment deleted successfully", card)
 }
+
