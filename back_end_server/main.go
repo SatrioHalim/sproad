@@ -57,9 +57,13 @@ func main() {
 	listRepo := repositories.NewListRepository()
 	listService := services.NewListService(listRepo, boardRepo, listPositionRepo)
 
+	// Label handling
+	labelRepo := repositories.NewLabelRepository()
+	// labelService := services.NewLabelService(labelRepo)
+
 	// Card handling
 	cardRepo := repositories.NewCardRepository()
-	cardService := services.NewCardService(cardRepo, listRepo, userRepo)
+	cardService := services.NewCardService(cardRepo, listRepo, userRepo, labelRepo)
 	boardController := controllers.NewBoardController(boardService, listService)
 	listController := controllers.NewListController(listService, cardService)
 	cardController := controllers.NewCardController(cardService)
