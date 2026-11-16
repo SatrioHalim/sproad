@@ -28,17 +28,21 @@ type CardService interface {
 	AddAttachments(cardPublicID string, userPublicID string, storedFiles []string) error
 	DeleteAttachment(cardPublicID string, attachmentPublicID string) error
 	UpdatePosition(listPublicID string, positions types.UUIDArray) error
+
+	AddLabel(cardPublicID string, labelPublicID string) error
+	RemoveLabel(cardPublicID string, labelPublicID string) error
 }
 
 type cardService struct {
 	cardRepo repositories.CardRepository
 	listRepo repositories.ListRepository
 	userRepo repositories.UserRepository
+	labelRepo repositories.LabelRepository
 }
 
-func NewCardService(cardRepo repositories.CardRepository, listRepo repositories.ListRepository, userRepo repositories.UserRepository) CardService {
+func NewCardService(cardRepo repositories.CardRepository, listRepo repositories.ListRepository, userRepo repositories.UserRepository, labelRepo repositories.LabelRepository) CardService {
 	return &cardService{
-		cardRepo, listRepo, userRepo,
+		cardRepo, listRepo, userRepo, labelRepo,
 	}
 }
 
@@ -398,4 +402,36 @@ func (s *cardService) DeleteAttachment(cardPublicID string, attachmentPublicID s
 	}
 
 	return nil
+}
+
+func (s *cardService) AddLabel(cardPublicID, labelPublicID string) error {
+	// cek is card exist
+	card, err := s.cardRepo.FindByPublicID(cardPublicID)
+	
+	if err != nil {
+		return errors.New("Card not found")
+	}
+
+	// cek is label exist
+	label, err := s.labelRepo.FindByPublicID(labelPublicID)
+
+	if err != nil {
+		return errors.New("Label not found")
+	}
+
+	return s.cardRepo.AddLabel(uint(card.InternalID), uint(label.InternalID))
+}
+
+func (s *cardService) RemoveLabel(cardPublicID , labelPublicID string) error {
+	card, err := s.cardRepo.FindByPublicID(cardPublicID)
+	if err != nil {
+		return errors.New("Card not found")
+	}
+
+	label, err := s.labelRepo.FindByPublicID(labelPublicID)
+	if err != nil {
+		return errors.New("Label not found")
+	}
+
+	return s.cardRepo.RemoveLabel(uint(card.InternalID), uint(label.InternalID))
 }
